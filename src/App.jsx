@@ -9,12 +9,17 @@ import {
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { Toaster, toast } from "sonner";
-import { DIFFICULTIES, useGameSettings } from "./store/useGameSettings.js";
+import { useGameSettings } from "./store/useGameSettings.js";
+
+const BOARD_THEMES = {
+  classic: { light: "#e8deca", dark: "#698777" },
+  green: { light: "#edf0d2", dark: "#7b9b60" },
+  blue: { light: "#e2e6e8", dark: "#8fa4ad" },
+};
 
 const ENGINE_PATH = "stockfish/stockfish-19-lite-single.js";
 const MotionDiv = motion.div;
 const PIECES = [["q", "♕", "Ферзь"], ["r", "♖", "Ладья"], ["b", "♗", "Слон"], ["n", "♘", "Конь"]];
-const DIFFICULTY_STEPS = ["beginner", "normal", "strong"];
 
 function getStatus(game, thinking, ready, humanColor) {
   if (game.isCheckmate()) return game.turn() === humanColor ? "Мат. Победил компьютер." : "Мат! Ты победил.";
@@ -51,11 +56,13 @@ export default function App() {
   const activeSearchRef = useRef(false);
   const stoppingRef = useRef(false);
   const queuedFenRef = useRef(null);
-  const difficultyRef = useRef("normal");
+  const eloRef = useRef(1800);
   const humanColorRef = useRef("w");
 
-  const difficulty = useGameSettings((s) => s.difficulty);
-  const setDifficulty = useGameSettings((s) => s.setDifficulty);
+  const elo = useGameSettings((s) => s.elo);
+  const setElo = useGameSettings((s) => s.setElo);
+  const boardTheme = useGameSettings((s) => s.boardTheme);
+  const setBoardTheme = useGameSettings((s) => s.setBoardTheme);
   const soundEnabled = useGameSettings((s) => s.soundEnabled);
   const setSoundEnabled = useGameSettings((s) => s.setSoundEnabled);
   const animationsEnabled = useGameSettings((s) => s.animationsEnabled);
@@ -66,7 +73,7 @@ export default function App() {
   const setLastMoveEnabled = useGameSettings((s) => s.setLastMoveEnabled);
   const coordinatesEnabled = useGameSettings((s) => s.coordinatesEnabled);
   const setCoordinatesEnabled = useGameSettings((s) => s.setCoordinatesEnabled);
-  difficultyRef.current = difficulty;
+  eloRef.current = elo;
   humanColorRef.current = humanColor;
 
   const game = gameRef.current;
@@ -97,13 +104,14 @@ export default function App() {
       setThinking(true);
       return;
     }
-    const level = DIFFICULTIES[difficultyRef.current] || DIFFICULTIES.normal;
+    const rating = Math.max(1320, Math.min(3190, eloRef.current || 1800));
     activeSearchRef.current = true;
     thinkingRef.current = true;
     setThinking(true);
-    worker.postMessage("setoption name Skill Level value " + level.skill);
+    worker.postMessage("setoption name UCI_LimitStrength value true");
+    worker.postMessage("setoption name UCI_Elo value " + rating);
     worker.postMessage("position fen " + positionFen);
-    worker.postMessage("go depth " + level.depth);
+    worker.postMessage("go depth 18");
   }, []);
 
   const cancelSearch = useCallback(() => {
@@ -198,7 +206,7 @@ export default function App() {
     if (piece.type === "p" && targetSquare[1] === lastRank) { setPromotion({ from: sourceSquare, to: targetSquare }); return false; }
     return playMove(sourceSquare, targetSquare);
   };
-  const changeDifficulty = (value) => { setDifficulty(value); toast("Сложность сохранена"); };
+  const changeElo = (value) => setElo(value);
   const openReview = (ply) => { setReviewPly(ply); setScreen("review"); };
   const openSettings = () => { setSettingsReturn(screen); setScreen("settings"); };
   const boardPosition = screen === "review" ? displayedGame || fen : fen;
@@ -223,6 +231,7 @@ export default function App() {
     else setSelectedSquare(null);
   };
   const renderBoard = (compact = false) => {
+    const palette = BOARD_THEMES[boardTheme] || BOARD_THEMES.classic;
     const squareStyles = {};
     if (!compact && screen === "game") {
       if (lastMoveEnabled) {
@@ -252,8 +261,8 @@ export default function App() {
         squareStyles,
         onSquareClick: compact ? undefined : handleSquareClick,
         showNotation: coordinatesEnabled,
-        darkSquareStyle: { backgroundColor: "#698777" },
-        lightSquareStyle: { backgroundColor: "#e8deca" },
+        darkSquareStyle: { backgroundColor: palette.dark },
+        lightSquareStyle: { backgroundColor: palette.light },
         boardStyle: { borderRadius: "13px", overflow: "hidden" },
       }} />
       {screen === "game" && thinking && <div className="thinking-chip"><span className="thinking-dot"/> Stockfish думает</div>}
@@ -276,7 +285,7 @@ export default function App() {
           <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Продумайте каждый ход.</p></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
           <div className="home-board">{renderBoard(true)}</div>
           <div className="home-actions">
-            {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {DIFFICULTIES[difficulty].label}</small></span><ChevronRight className="continue-arrow"/></button>}
+            {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {elo} Elo</small></span><ChevronRight className="continue-arrow"/></button>}
             <button className="new-game-button" onClick={() => { setChosenSide("w"); setScreen("new"); }}>Новая партия <ChevronRight size={19}/></button>
           </div>
         </MotionDiv>}
@@ -286,13 +295,13 @@ export default function App() {
           <section className="form-section"><h2>ВАША СТОРОНА</h2><div className="side-options">
             {[["w","♔","Белые"],["b","♚","Чёрные"],["random","?","Случайно"]].map(([value,symbol,label]) => <button key={value} className={"side-option "+(chosenSide===value?"selected":"")} onClick={() => setChosenSide(value)}><span>{symbol}</span><b>{label}</b>{chosenSide===value && <i><Check size={13}/></i>}</button>)}
           </div></section>
-          <DifficultyControl difficulty={difficulty} onChange={changeDifficulty}/>
+          <DifficultyControl elo={elo} onChange={changeElo}/>
           <div className="bottom-actions"><button className="gold-button" onClick={() => startGame(chosenSide)}>Начать партию</button>{history.length > 0 && <button className="text-button" onClick={() => setScreen("game")}>Вернуться к текущей партии</button>}</div>
         </MotionDiv>}
 
         {screen === "game" && <MotionDiv className="screen game-screen" key="game" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
           <div className="game-topline"><button className="round-icon" onClick={() => setScreen("home")} aria-label="В меню"><ArrowLeft/></button><div className="game-title"><span className="eyebrow">BOSS CHESS</span><strong>Партия</strong></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
-          <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF" active={thinking || (game.turn() !== humanColor && !finished)} right={<span className="elo-chip">{DIFFICULTIES[difficulty].label}<ChevronDown size={13}/></span>}/>
+          <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF" active={thinking || (game.turn() !== humanColor && !finished)} right={<span className="elo-chip">{elo} Elo</span>}/>
           {renderBoard()}
           <PlayerBar name="Вы" subtitle={sideLabel} avatar="ВЫ" active={game.turn() === humanColor && !finished} right={<span className={"turn-pill "+(game.turn()===humanColor&&!finished?"active":"")}>{finished ? "Партия завершена" : game.turn()===humanColor ? "Ваш ход" : thinking ? "Ход ИИ" : "Ожидание"}</span>}/>
           {game.isCheck() && !finished && <div className="check-notice"><span/> Шах вашему королю</div>}
@@ -329,7 +338,7 @@ export default function App() {
           <DifficultyControl difficulty={difficulty} onChange={changeDifficulty}/>
           <section className="settings-group"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></section>
           <section className="settings-group"><h2>ОБЩЕЕ</h2><SettingToggle label="Звуки" checked={soundEnabled} onChange={setSoundEnabled}/><SettingToggle label="Анимации" checked={animationsEnabled} onChange={setAnimationsEnabled}/></section>
-          <section className="settings-group"><h2>ДОСКА</h2><div className="board-themes"><button className="theme-swatch classic selected" aria-label="Классическая тема"/><button className="theme-swatch green" aria-label="Зелёная тема" disabled/><button className="theme-swatch blue" aria-label="Синяя тема" disabled/></div></section>
+          <section className="settings-group"><h2>ЦВЕТ ДОСКИ</h2><div className="board-themes">{[["classic","Классическая"],["green","Зелёная"],["blue","Синяя"]].map(([key,label])=><button key={key} className={"theme-swatch "+key+(boardTheme===key?" selected":"")} aria-label={label} aria-pressed={boardTheme===key} onClick={()=>setBoardTheme(key)}/>)}</div></section>
           <p className="helper-text">Настройки сохраняются на этом устройстве.</p>
         </MotionDiv>}
       </AnimatePresence>
@@ -343,9 +352,9 @@ function ScreenTitle({title,onBack}) {
 function PlayerBar({name,subtitle,avatar,active,right}) {
   return <div className="player-bar"><div className="player-avatar">{avatar==="SF"?<span>SF</span>:<span>{avatar}</span>}</div><div className="player-info"><strong>{name}</strong><small>{subtitle}</small></div>{right || (active?<span className="active-dot"/>:null)}</div>;
 }
-function DifficultyControl({difficulty,onChange}) {
-  const current=DIFFICULTIES[difficulty]||DIFFICULTIES.normal;
-  return <section className="difficulty-section"><h2>СЛОЖНОСТЬ</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{current.label==="Начальный"?"1400":current.label==="Обычный"?"1800":"2600"}</strong><span>Elo</span><small>Stockfish</small></div><input aria-label="Сложность компьютера" type="range" min="0" max="2" step="1" value={DIFFICULTY_STEPS.indexOf(difficulty)} onChange={e=>onChange(DIFFICULTY_STEPS[Number(e.target.value)])}/><div className="range-labels"><span>Начальный</span><span>Сильный</span></div><div className="difficulty-presets">{DIFFICULTY_STEPS.map((key)=><button key={key} className={difficulty===key?"selected":""} onClick={()=>onChange(key)}>{DIFFICULTIES[key].label}</button>)}</div></div></section>;
+function DifficultyControl({elo,onChange}) {
+  const presets=[1400,1800,2200,2600,3000];
+  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="1320" max="3190" step="10" value={elo} onChange={e=>onChange(Number(e.target.value))}/><div className="range-labels"><span>1320</span><span>3190</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="1320" max="3190" step="10" value={elo} onChange={e=>onChange(Number(e.target.value))}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>onChange(value)}>{value}</button>)}</div></div></section>;
 }
 function SettingToggle({label,checked,onChange}) {
   return <label className="setting-toggle"><span>{label}</span><input type="checkbox" checked={Boolean(checked)} onChange={e=>onChange(e.target.checked)}/><i/></label>;
