@@ -266,7 +266,11 @@ export default function App() {
         position: compact ? new Chess().fen() : boardPosition,
         boardOrientation: humanColor === "w" ? "white" : "black",
         onPieceDrop: compact || screen !== "game" ? undefined : onPieceDrop,
-        allowDragging: !compact && screen === "game" && !thinking && !finished && !promotion && engineReady && game.turn() === humanColor,
+        allowDragging: !compact && screen === "game" && !finished && !promotion && engineReady,
+        isDraggablePiece: ({ sourceSquare }) => {
+          const piece = sourceSquare ? game.get(sourceSquare) : null;
+          return !thinking && !finished && !promotion && game.turn() === humanColor && piece?.color === humanColor;
+        },
         animationDurationInMs: 190,
         showAnimations: motionEnabled,
         squareStyles,
