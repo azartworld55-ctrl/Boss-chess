@@ -17,7 +17,7 @@ export const useGameSettings = create(
       hintsEnabled: true,
       lastMoveEnabled: true,
       coordinatesEnabled: false,
-      setElo: (elo) => set({ elo: Math.max(400, Math.min(3190, Number(elo) || 1800)) }),
+      setElo: (elo) => set({ elo: Math.max(100, Math.min(3190, Number(elo) || 1800)) }),
       setBoardTheme: (boardTheme) => set({ boardTheme }),
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
       setAnimationsEnabled: (animationsEnabled) => set({ animationsEnabled }),
