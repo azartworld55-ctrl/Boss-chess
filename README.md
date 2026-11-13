@@ -1,50 +1,57 @@
-# Boss Chess
+# Boss Chess 2.0
 
-A browser chess game. The first milestone is ordinary chess against the Stockfish computer engine. Bosses and special abilities will be designed later, after the classic game is working well.
+Русскоязычная адаптивная шахматная игра против Stockfish. Интерфейс проектируется по принципу mobile-first.
 
-## Current features
+## Возможности
 
-- Standard chess rules powered by `chess.js`
-- Responsive board powered by `react-chessboard`
-- Computer opponent powered by Stockfish 19 Lite (single-threaded WebAssembly)
-- Three engine strength presets
-- Move history, undo, restart, and pawn promotion choices
-- Check, checkmate, stalemate, and draw detection
+- Игра белыми против Stockfish 19 Lite (WebAssembly).
+- Три уровня сложности.
+- История ходов.
+- Отмена хода и новая партия.
+- Превращение пешки в любую фигуру.
+- Обработка мата, пата, шаха и ничьих через chess.js.
+- Настройки сложности и уведомлений сохраняются на устройстве.
+- Адаптивный интерфейс для телефонов, планшетов и компьютеров.
+- Диалог настроек на Radix UI, иконки Lucide, анимации Motion.
+- Автоматические проверки кода, правил и мобильной версии.
 
-## Run locally
+## Запуск
 
-Requires Node.js 20.19+ or 22.12+.
+Требуется Node.js 20.19+ или 22.12+.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Create a production build:
+Проверки и production-сборка:
 
 ```bash
+npm run lint
+npm test
 npm run build
 npm run preview
 ```
 
-The Vite build copies the Stockfish JavaScript and WebAssembly files into the output folder.
+Браузерные тесты (Playwright):
 
-## GitHub Pages
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
 
-The repository includes a GitHub Actions workflow for deployment. In the repository settings, open **Pages** and set the build and deployment source to **GitHub Actions**. Each push to `main` will then publish the site.
+## Технологии
 
-## Main technologies
+React 19, Vite 7, react-chessboard, chess.js, Stockfish, Lucide, Motion, Zustand, Sonner и Radix Dialog.
 
-- React
-- Vite
-- react-chessboard
-- chess.js
-- Stockfish.js
+Chessground и chessops остаются кандидатами на отдельную миграцию: замена доски и правил без полного тестирования может нарушить совместимость с текущим игровым движком. React Bits — набор отдельных компонентов и эффектов, а не обязательная runtime-зависимость. shadcn/ui — подход к организации компонентов на базе Radix, а не пакет, который нужно подключать целиком. React Spring не используется как дублирующая Motion система анимации; GSAP и React Three Fiber оставлены для конкретных будущих задач.
 
-## Third-party licenses
+## Развёртывание
 
-- react-chessboard: MIT.
-- chess.js: BSD-2-Clause.
-- Stockfish.js / Stockfish engine: GPL-3.0.
+GitHub Actions собирает проект и публикует папку `dist` на GitHub Pages. Отдельный workflow проверяет ESLint, unit-тесты, сборку и браузерные сценарии.
 
-Stockfish is distributed under GPL-3.0. Keep its license and notices with the engine files when redistributing the built application. Review each dependency's license before publishing modified or redistributed builds.
+Renovate настроен через `renovate.json`; для запуска бота репозиторий должен быть подключён к Renovate App.
+
+## Лицензии
+
+Проверяйте лицензии каждой зависимости перед распространением. Stockfish распространяется по GPL-3.0; сохраняйте соответствующие уведомления и соблюдайте условия лицензии движка.
