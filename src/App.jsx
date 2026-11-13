@@ -37,7 +37,6 @@ export default function App() {
   const [engineReady, setEngineReady] = useState(false);
   const [engineError, setEngineError] = useState("");
   const [promotion, setPromotion] = useState(null);
-  const [boardEffect, setBoardEffect] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const gameRef = useRef(new Chess());
@@ -89,9 +88,6 @@ export default function App() {
     const current = gameRef.current;
     try {
       const move = current.move({ from, to, promotion: promotionPiece });
-      const effectType = current.isCheckmate() ? "mate" : current.isCheck() ? "check" : move.captured ? "capture" : "move";
-      const effectLabel = effectType === "mate" ? "МАТ" : effectType === "check" ? "ШАХ" : effectType === "capture" ? "ВЗЯТИЕ" : "ХОД";
-      setBoardEffect({ id: Date.now(), type: effectType, label: effectLabel });
     } catch {
       return false;
     }
@@ -153,9 +149,6 @@ export default function App() {
             to: uci.slice(2, 4),
             ...(uci.length > 4 ? { promotion: uci[4].toLowerCase() } : {}),
           });
-          const effectType = current.isCheckmate() ? "mate" : current.isCheck() ? "check" : move.captured ? "capture" : "move";
-          const effectLabel = effectType === "mate" ? "МАТ" : effectType === "check" ? "ШАХ" : effectType === "capture" ? "ВЗЯТИЕ" : "ХОД";
-          setBoardEffect({ id: Date.now(), type: effectType, label: effectLabel });
           syncGame(current);
         } catch {
           setEngineError("Движок вернул некорректный ход. Начни новую партию.");
@@ -283,8 +276,7 @@ export default function App() {
               lightSquareStyle: { backgroundColor: "#eeeadd" },
               boardStyle: { borderRadius: "8px", overflow: "hidden" },
             }}/>
-            <AnimatePresence mode="wait">
-              {boardEffect && <MotionDiv key={boardEffect.id} className={`board-event board-event-${boardEffect.type}`} initial={{ opacity: 0, y: -12, scale: 0.88 }} animate={{ opacity: [0, 1, 1, 0], y: [-12, 0, 0, -5], scale: [0.88, 1, 1, 0.96] }} transition={{ duration: 1.05, times: [0, 0.18, 0.72, 1], ease: "easeOut" }}><span>{boardEffect.label}</span></MotionDiv>}
+            <AnimatePresence>
               {thinking && <MotionDiv className="thinking-overlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
                 <span className="thinking-dot"/><span>Компьютер думает</span>
               </MotionDiv>}
