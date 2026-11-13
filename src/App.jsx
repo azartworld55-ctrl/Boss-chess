@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 import { useGameSettings } from "./store/useGameSettings.js";
 
 const BOARD_THEMES = {
@@ -327,7 +327,7 @@ export default function App() {
         {screen === "review" && <MotionDiv className="screen game-screen" key="review" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
           <ScreenTitle title="Просмотр партии" onBack={() => setScreen("history")}/>
           <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF"/>
-          <div className="board-frame"><Chessboard options={{id:"boss-chess-review",position:displayedGame||fen,boardOrientation:humanColor==="w"?"white":"black",allowDragging:false,animationDurationInMs:0,showNotation:coordinatesEnabled,darkSquareStyle:{backgroundColor:"#698777"},lightSquareStyle:{backgroundColor:"#e8deca"},boardStyle:{borderRadius:"13px",overflow:"hidden"}}}/></div>
+          <div className="board-frame"><Chessboard options={{id:"boss-chess-review",position:displayedGame||fen,boardOrientation:humanColor==="w"?"white":"black",allowDragging:false,animationDurationInMs:0,showNotation:coordinatesEnabled,darkSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).dark},lightSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).light},boardStyle:{borderRadius:"13px",overflow:"hidden"}}}/></div>
           <PlayerBar name="Вы" subtitle={sideLabel} avatar="ВЫ"/>
           <div className="review-controls"><button onClick={()=>setReviewPly(0)}><ChevronsLeft/></button><button onClick={()=>setReviewPly(Math.max(0,(reviewPly||0)-1))}><ArrowLeft/></button><button onClick={()=>setReviewPly(Math.min(history.length,(reviewPly||0)+1))}><ChevronRight/></button><button onClick={()=>setReviewPly(history.length)}><ChevronsRight/></button></div>
           <div className="bottom-actions"><button className="gold-button" onClick={()=>setScreen("game")}>Вернуться к партии</button></div>
@@ -335,7 +335,7 @@ export default function App() {
 
         {screen === "settings" && <MotionDiv className="screen sub-screen" key="settings" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
           <ScreenTitle title="Настройки" onBack={() => setScreen(settingsReturn)}/>
-          <DifficultyControl difficulty={difficulty} onChange={changeDifficulty}/>
+          <DifficultyControl elo={elo} onChange={changeElo}/>
           <section className="settings-group"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></section>
           <section className="settings-group"><h2>ОБЩЕЕ</h2><SettingToggle label="Звуки" checked={soundEnabled} onChange={setSoundEnabled}/><SettingToggle label="Анимации" checked={animationsEnabled} onChange={setAnimationsEnabled}/></section>
           <section className="settings-group"><h2>ЦВЕТ ДОСКИ</h2><div className="board-themes">{[["classic","Классическая"],["green","Зелёная"],["blue","Синяя"]].map(([key,label])=><button key={key} className={"theme-swatch "+key+(boardTheme===key?" selected":"")} aria-label={label} aria-pressed={boardTheme===key} onClick={()=>setBoardTheme(key)}/>)}</div></section>
