@@ -19,3 +19,65 @@
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 
 .elo-number{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:15px;color:var(--muted);font-size:12px}.elo-number input{width:112px;min-height:40px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#202127;color:#f1eee7;font-variant-numeric:tabular-nums}.difficulty-presets{grid-template-columns:repeat(5,minmax(0,1fr))}.difficulty-presets button{font-variant-numeric:tabular-nums;padding:0 4px}
+
+
+/* App viewport: keep the game itself fixed to the screen, not the document. */
+html,body,#root{height:100%;min-height:0;overflow:hidden}
+body{overscroll-behavior:none}
+.app-shell{
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+.topbar{flex:0 0 58px}
+.screen{height:calc(100% - 58px);min-height:0}
+.game-screen{
+  height:calc(100% - 58px);
+  min-height:0;
+  overflow:hidden;
+  justify-content:space-between;
+  gap:clamp(5px,1vh,10px);
+  padding:clamp(8px,1.5vh,14px) 0 max(8px,env(safe-area-inset-bottom, 0px));
+}
+.game-topline,.player-bar,.notation-strip,.game-controls{flex-shrink:0}
+.game-topline{min-height:38px;margin:0}
+.player-bar{min-height:44px}
+.player-avatar{width:40px;height:40px;flex-basis:40px;border-radius:12px}
+.board-frame{
+  flex:0 1 auto;
+  width:min(100%,calc(100dvh - 420px));
+  max-width:100%;
+  max-height:calc(100dvh - 390px);
+  margin:0 auto;
+  aspect-ratio:1;
+}
+.board-frame>div{width:100%!important;height:100%!important}
+.game-controls{margin-top:0}
+.game-controls button{min-height:clamp(56px,8.5vh,72px)}
+.notation-strip{min-height:42px;max-height:48px;padding:11px 14px}
+.check-notice{flex-shrink:0;padding:9px 13px}
+.sub-screen{height:calc(100% - 58px);min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#454750 transparent}
+.home-screen{height:calc(100% - 58px);min-height:0;overflow:hidden;padding:clamp(14px,2.5vh,26px) 0 max(12px,env(safe-area-inset-bottom, 0px))}
+.home-board{width:min(72%,calc(100dvh - 470px),360px);margin:12px auto;flex:0 1 auto}
+.home-actions{flex:0 0 auto}
+@media(max-width:600px){
+  .app-shell{width:calc(100% - 20px)}
+  .game-screen{gap:clamp(4px,.8vh,8px)}
+  .board-frame{width:min(100%,calc(100dvh - 405px));max-height:calc(100dvh - 380px)}
+  .game-controls button{min-height:clamp(54px,8vh,66px);gap:5px}
+  .game-controls button svg{width:20px;height:20px}
+  .game-controls button span{font-size:10px}
+  .home-board{width:min(78%,calc(100dvh - 450px),330px)}
+}
+@media(max-height:700px){
+  .game-screen{gap:4px;padding-top:5px;padding-bottom:5px}
+  .board-frame{width:min(100%,calc(100dvh - 360px));max-height:calc(100dvh - 350px)}
+  .player-bar{min-height:38px}
+  .player-avatar{width:36px;height:36px;flex-basis:36px}
+  .game-controls button{min-height:52px}
+  .notation-strip{min-height:36px;max-height:40px;padding:8px 12px}
+}
