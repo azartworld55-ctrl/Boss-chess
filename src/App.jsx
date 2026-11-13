@@ -198,7 +198,7 @@ export default function App() {
     return playMove(sourceSquare, targetSquare);
   };
   const changeDifficulty = (value) => { setDifficulty(value); toast("Сложность сохранена"); };
-  const openReview = (ply) => { setReviewPly(ply); setReviewFen(null); setScreen("review"); };
+  const openReview = (ply) => { setReviewPly(ply); setScreen("review"); };
   const boardPosition = screen === "review" ? displayedGame || fen : fen;
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
