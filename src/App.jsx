@@ -267,10 +267,12 @@ export default function App() {
         boardOrientation: humanColor === "w" ? "white" : "black",
         onPieceDrop: compact || screen !== "game" ? undefined : onPieceDrop,
         allowDragging: !compact && screen === "game" && !finished && !promotion && engineReady,
-        isDraggablePiece: ({ sourceSquare }) => {
-          const piece = sourceSquare ? game.get(sourceSquare) : null;
+        canDragPiece: ({ square }) => {
+          const piece = square ? game.get(square) : null;
           return !thinking && !finished && !promotion && game.turn() === humanColor && piece?.color === humanColor;
         },
+        draggingPieceStyle: { transform: "scale(1)", zIndex: 20 },
+        draggingPieceGhostStyle: { opacity: 0.35 },
         animationDurationInMs: 190,
         showAnimations: motionEnabled,
         squareStyles,
