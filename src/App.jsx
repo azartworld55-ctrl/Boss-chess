@@ -10,6 +10,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { Toaster } from "sonner";
 import { useGameSettings } from "./store/useGameSettings.js";
+import CampaignScreen from "./engine/CampaignScreen.jsx";
 
 const BOARD_THEMES = {
   classic: { light: "#e8deca", dark: "#698777" },
@@ -316,8 +317,11 @@ export default function App() {
           <div className="home-actions">
             {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {elo} Elo</small></span><ChevronRight className="continue-arrow"/></button>}
             <button className="new-game-button" onClick={() => { setChosenSide("w"); setScreen("new"); }}>Новая партия <ChevronRight size={19}/></button>
+            <button className="campaign-home-button" onClick={() => setScreen("campaign")}>Кампания <span>Глава 1 · Классика</span><ChevronRight size={19}/></button>
           </div>
         </MotionDiv>}
+
+        {screen === "campaign" && <CampaignScreen onExit={() => setScreen("home")} />}
 
         {screen === "new" && <MotionDiv className="screen sub-screen" key="new" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionEnabled ? 0.18 : 0}}>
           <ScreenTitle title="Новая партия" onBack={() => setScreen("home")}/>
