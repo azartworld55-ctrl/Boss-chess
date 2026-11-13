@@ -206,3 +206,60 @@ body{overscroll-behavior:none}
 .campaign-intro h2{margin:4px 0;font:800 28px Manrope,sans-serif;color:var(--gold)}
 .campaign-intro p{color:#e5e0d8;font-size:15px;line-height:1.5}
 @media(max-height:720px){.campaign-screen{gap:6px;padding-top:6px}.campaign-board{width:min(100%,calc(100dvh - 325px));max-height:calc(100dvh - 315px)}.campaign-opponent{min-height:58px}.campaign-opponent img,.campaign-unknown{width:46px;height:46px}}
+
+/* Campaign layout: the board keeps its own space; rules stay collapsed until requested. */
+.campaign-screen{
+  height:calc(100% - 58px);
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#454750 transparent;
+  padding:10px 0 max(12px,env(safe-area-inset-bottom,0px));
+}
+.campaign-board{
+  flex:0 0 auto;
+  width:min(100%,calc(100dvh - 300px));
+  max-height:calc(100dvh - 300px);
+  margin:0 auto;
+}
+.campaign-rules{
+  flex:0 0 auto;
+  padding:0;
+  overflow:hidden;
+}
+.campaign-rules summary{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  padding:0 13px;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  list-style:none;
+}
+.campaign-rules summary::-webkit-details-marker{display:none}
+.campaign-rules summary::after{
+  content:"+";
+  margin-left:auto;
+  color:var(--gold-light);
+  font-size:18px;
+}
+.campaign-rules[open] summary::after{content:"−"}
+.campaign-rules>span{display:block;padding:0 13px 8px}
+.campaign-rules>span:last-child{padding-bottom:12px}
+.campaign-opponent img{display:block;flex:0 0 56px;min-width:56px;min-height:56px;background:#28242d}
+.campaign-image-missing::after{
+  content:"♟";
+  width:56px;height:56px;display:grid;place-items:center;
+  border-radius:12px;background:#28242d;color:var(--gold);font-size:30px;
+}
+.campaign-intro img{display:block}
+@media(max-height:700px){
+  .campaign-screen{gap:6px;padding-top:6px}
+  .campaign-board{width:min(100%,calc(100dvh - 270px));max-height:calc(100dvh - 270px)}
+  .campaign-opponent{min-height:54px}
+  .campaign-opponent img,.campaign-unknown{width:46px;height:46px;min-width:46px;min-height:46px;flex-basis:46px}
+}
