@@ -111,17 +111,19 @@ export default function App() {
       setThinking(true);
       return;
     }
-    const selectedElo = Math.max(400, Math.min(3190, eloRef.current || 1800));
-    const rating = Math.max(1320, selectedElo);
-    const skillLevel = Math.round(((selectedElo - 400) / (3190 - 400)) * 20);
+    const selectedElo = Math.max(100, Math.min(3190, eloRef.current || 1800));
+    const belowEloFloor = selectedElo < 1320;
+    const skillLevel = belowEloFloor
+      ? Math.round(((selectedElo - 100) / (1320 - 100)) * 8)
+      : 20;
     activeSearchRef.current = true;
     thinkingRef.current = true;
     setThinking(true);
-    worker.postMessage("setoption name UCI_LimitStrength value true");
-    worker.postMessage("setoption name UCI_Elo value " + rating);
+    worker.postMessage("setoption name UCI_LimitStrength value " + (belowEloFloor ? "false" : "true"));
+    if (!belowEloFloor) worker.postMessage("setoption name UCI_Elo value " + selectedElo);
     worker.postMessage("setoption name Skill Level value " + skillLevel);
     worker.postMessage("position fen " + positionFen);
-    worker.postMessage("go depth 18");
+    worker.postMessage("go depth " + (belowEloFloor ? "12" : "18"));
   }, []);
 
   const cancelSearch = useCallback(() => {
@@ -380,7 +382,7 @@ function DifficultyControl({elo,onChange}) {
   useEffect(()=>setDraft(String(elo)),[elo]);
   const applyDraft=()=>{const value=Number(draft);if(Number.isFinite(value)&&value>=400&&value<=3190)onChange(Math.round(value/10)*10);else setDraft(String(elo));};
   const choose=value=>{setDraft(String(value));onChange(value);};
-  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="400" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>400 · Очень легко</span><span>3190 · Максимум</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="400" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
+  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="100" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>100 · Очень легко</span><span>3190 · Максимум</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="100" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
 }
 function SettingToggle({label,checked,onChange}) {
   return <label className="setting-toggle"><span>{label}</span><input type="checkbox" checked={Boolean(checked)} onChange={e=>onChange(e.target.checked)}/><i/></label>;
