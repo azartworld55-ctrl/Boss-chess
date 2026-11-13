@@ -41,3 +41,47 @@
 @media (prefers-reduced-motion: reduce) {
   .game-intro,.action-card,.moves-card,.board-wrap.is-check,.settings-dialog,.dialog-overlay { animation: none !important; }
 }
+
+
+/* Board feedback and accessible visually-hidden labels. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.board-event {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.board-event span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  padding: 8px 13px;
+  border: 1px solid #d7bd83aa;
+  border-radius: 999px;
+  background: #171a20eF;
+  color: #ead7ad;
+  box-shadow: 0 5px 24px #0007, 0 0 18px #c9aa7033;
+  font: 800 10px Manrope, sans-serif;
+  letter-spacing: 1.8px;
+  backdrop-filter: blur(8px);
+}
+.board-event-capture span { border-color: #8da98fbb; color: #c9e2ca; box-shadow: 0 5px 24px #0007, 0 0 18px #8da98f44; }
+.board-event-check span { border-color: #d59b65cc; color: #ffdaa8; box-shadow: 0 5px 24px #0007, 0 0 22px #d59b6555; }
+.board-event-mate span { border-color: #c77970dd; color: #ffc6bd; box-shadow: 0 5px 24px #0007, 0 0 25px #c7797066; }
+.board-wrap.is-check { border-color: #9e6254; }
+@media (prefers-reduced-motion: reduce) {
+  .board-event { display: none; }
+}
