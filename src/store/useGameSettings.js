@@ -10,13 +10,15 @@ export const DIFFICULTIES = {
 export const useGameSettings = create(
   persist(
     (set) => ({
-      difficulty: "normal",
+      elo: 1800,
+      boardTheme: "classic",
       soundEnabled: false,
       animationsEnabled: true,
       hintsEnabled: true,
       lastMoveEnabled: true,
       coordinatesEnabled: false,
-      setDifficulty: (difficulty) => set({ difficulty }),
+      setElo: (elo) => set({ elo: Math.max(1320, Math.min(3190, Number(elo) || 1800)) }),
+      setBoardTheme: (boardTheme) => set({ boardTheme }),
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
       setAnimationsEnabled: (animationsEnabled) => set({ animationsEnabled }),
       setHintsEnabled: (hintsEnabled) => set({ hintsEnabled }),
