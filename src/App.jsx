@@ -203,7 +203,7 @@ export default function App() {
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
 
-  const handleSquareClick = ({ piece, square }) => {
+  const handleSquareClick = ({ square }) => {
     if (screen !== "game" || !hintsEnabled || thinking || finished || game.turn() !== humanColor) return;
     if (selectedSquare) {
       const legal = game.moves({ square: selectedSquare, verbose: true });
@@ -216,7 +216,8 @@ export default function App() {
         return;
       }
     }
-    if (piece && piece[0] === humanColor.toUpperCase()) setSelectedSquare(square);
+    const clickedPiece = game.get(square);
+    if (clickedPiece?.color === humanColor) setSelectedSquare(square);
     else setSelectedSquare(null);
   };
   const renderBoard = (compact = false) => {
