@@ -263,7 +263,7 @@ export default function App() {
             <span className={"connection-state " + (engineReady ? "is-ready" : "")}><i/>{engineReady ? "В сети" : "Загрузка"}</span>
           </div>
 
-          <div className="board-wrap">
+          <div className={"board-wrap " + (game.isCheck() ? "is-check" : "")}>
             <Chessboard options={{
               id: "boss-chess-v2",
               position: fen,
@@ -310,7 +310,7 @@ export default function App() {
 
           <section className="action-card">
             <div className="difficulty-heading"><span>Сложность</span><span className="difficulty-current">{DIFFICULTIES[difficulty].label}<ChevronDown size={13}/></span></div>
-            <select className="difficulty-select" value={difficulty} onChange={(event) => changeDifficulty(event.target.value)} disabled={thinking}>
+            <select className="difficulty-select" aria-label="Уровень сложности игры" value={difficulty} onChange={(event) => changeDifficulty(event.target.value)} disabled={thinking}>
               {Object.entries(DIFFICULTIES).map(([key, value]) => <option value={key} key={key}>{value.label}</option>)}
             </select>
             <div className="primary-actions">
@@ -323,7 +323,7 @@ export default function App() {
             <div className="moves-heading"><div><span className="section-kicker">ЗАПИСЬ ПАРТИИ</span><h2>Ходы</h2></div><span className="move-count">{history.length} полуход.</span></div>
             {moves.length === 0 ? <div className="empty-moves"><CircleHelp size={20}/><span>Сделай первый ход,<br/>чтобы начать партию.</span></div> :
               <ol className="move-history">
-                {moves.map((move) => <li key={move.number}>
+                {moves.map((move) => <motion.li key={move.number} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                   <span className="move-index">{move.number.toString().padStart(2,"0")}</span>
                   <span>{move.white}</span><span>{move.black}</span>
                 </li>)}
