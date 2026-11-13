@@ -229,7 +229,7 @@ export default function App() {
     <main className="app-shell">
       <Toaster position="top-center" theme="dark" richColors closeButton />
       <header className="app-header">
-        <a className="brand" href="./" aria-label="Boss Chess — главная">
+        <a className="brand" href="./">
           <span className="brand-icon"><Crown size={21} strokeWidth={1.8} /></span>
           <span className="brand-name">BOSS<span>CHESS</span></span>
         </a>
