@@ -245,7 +245,7 @@ export default function App() {
                 </label>
                 <div className="setting-row">
                   <span><strong>Сложность</strong><small>Уровень игры компьютера</small></span>
-                  <select value={difficulty} onChange={(event) => changeDifficulty(event.target.value)}>
+                  <select aria-label="Уровень сложности игры" value={difficulty} onChange={(event) => changeDifficulty(event.target.value)}>
                     {Object.entries(DIFFICULTIES).map(([key, value]) => <option value={key} key={key}>{value.label}</option>)}
                   </select>
                 </div>
