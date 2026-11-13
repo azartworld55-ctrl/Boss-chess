@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { motion as Motion } from "motion/react";
 import { ArrowLeft } from "lucide-react";
 import { Chessboard } from "react-chessboard";
 import { applyCampaignMove, campaignFen, campaignMoves, choosePawnBossMove, createPawnCampaign } from "./pawnCampaign.js";
@@ -46,7 +46,7 @@ export default function CampaignScreen({ onExit }) {
   if (selected) squareStyles[selected] = { backgroundColor: "#e5bd5b99", boxShadow: "inset 0 0 0 3px #f0ca70" };
   legalFrom.forEach((sq) => { squareStyles[sq] = { background: "radial-gradient(#dca83f99 18%, transparent 20%)" }; });
   return (
-    <motion.div className="screen campaign-screen" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
+    <Motion.div className="screen campaign-screen" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
       <div className="game-topline"><button className="round-icon" onClick={onExit} aria-label="В меню"><ArrowLeft/></button><div className="game-title"><span className="eyebrow">ГЛАВА 1 · КЛАССИКА</span><strong>Кампания</strong></div></div>
       <div className="campaign-opponent">
         {state.bossRevealed ? <img src={import.meta.env.BASE_URL + "images/bosses/pawn.webp"} alt="Портрет босса Пешка"/> : <div className="campaign-unknown">?</div>}
@@ -59,6 +59,6 @@ export default function CampaignScreen({ onExit }) {
       {state.result && <div className="result-card"><span className="eyebrow">ГЛАВА 1 · ИТОГ</span><h2>{state.result==="win"?"Победа":"Партия завершена"}</h2><p>{state.result==="win"?"Пешки больше не защищают своего босса.":"В этой попытке продолжить сражение не удалось."}</p><button className="gold-button" onClick={()=>setState(createPawnCampaign())}>Повторить битву</button></div>}
       {showIntro && <div className="campaign-intro"><div><img src={import.meta.env.BASE_URL + "images/bosses/pawn.webp"} alt="Пешка"/><div><span className="eyebrow">ПЕРВЫЙ БОСС</span><h2>Пешка</h2></div></div><p>Ты решила начать с самых маленьких? Тогда посмотрим, как далеко они смогут зайти.</p><button className="gold-button" onClick={()=>setShowIntro(false)}>Продолжить</button></div>}
       <p className="campaign-footnote">В кампании нет шаха и мата. Короля можно взять; сражение продолжается, пока на доске остаются пешки босса.</p>
-    </motion.div>
+    </Motion.div>
   );
 }
