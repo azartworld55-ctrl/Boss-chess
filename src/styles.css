@@ -24,7 +24,7 @@ button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid
 .brand-mark { font-size: 24px; line-height: 1; }
 .topbar-note, .eyebrow { color: #8c909a; font-size: 9px; font-weight: 700; letter-spacing: 1.3px; }
 
-.game-layout { display: grid; grid-template-columns: minmax(0,  min( min(66vh, 620px), 1fr)) minmax(250px, 300px); justify-content: center; gap: 22px; align-items: start; padding: 18px 0 16px; }
+.game-layout { display: grid; grid-template-columns: minmax(0, 620px) minmax(250px, 300px); justify-content: center; gap: 22px; align-items: start; padding: 18px 0 16px; }
 .board-column { min-width: 0; }
 .opponent-row, .player-row { display: flex; align-items: center; gap: 9px; min-height: 38px; }
 .opponent-row { margin-bottom: 7px; }
