@@ -3,8 +3,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft, ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight,
-  Crown, History, List, Pause, Play, RotateCcw, Settings2, SlidersHorizontal,
-  Undo2, Volume2, VolumeX, X, Zap, Check, Swords
+  Crown, List, Play, RotateCcw, Settings2, SlidersHorizontal,
+  Undo2, Check
 } from "lucide-react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
@@ -41,8 +41,6 @@ export default function App() {
   const [humanColor, setHumanColor] = useState("w");
   const [chosenSide, setChosenSide] = useState("w");
   const [reviewPly, setReviewPly] = useState(null);
-  const [reviewFen, setReviewFen] = useState(null);
-  const [showMoves, setShowMoves] = useState(false);
 
   const gameRef = useRef(new Chess());
   const workerRef = useRef(null);
@@ -200,7 +198,7 @@ export default function App() {
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
 
-  const Board = ({ compact = false }) => (
+  const renderBoard = (compact = false) => (
     <div className="board-frame">
       <Chessboard options={{
         id: compact ? "boss-chess-home" : "boss-chess-live",
@@ -231,7 +229,7 @@ export default function App() {
       <AnimatePresence mode="wait">
         {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}>
           <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Продумайте каждый ход.</p></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
-          <div className="home-board"><Board compact/></div>
+          <div className="home-board">{renderBoard(true)}</div>
           <div className="home-actions">
             {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {DIFFICULTIES[difficulty].label}</small></span><ChevronRight className="continue-arrow"/></button>}
             <button className="new-game-button" onClick={() => { setChosenSide("w"); setScreen("new"); }}>Новая партия <ChevronRight size={19}/></button>
@@ -250,7 +248,7 @@ export default function App() {
         {screen === "game" && <MotionDiv className="screen game-screen" key="game" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
           <div className="game-topline"><button className="round-icon" onClick={() => setScreen("home")} aria-label="В меню"><ArrowLeft/></button><div className="game-title"><span className="eyebrow">BOSS CHESS</span><strong>Партия</strong></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
           <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF" active={thinking || (game.turn() !== humanColor && !finished)} right={<span className="elo-chip">{DIFFICULTIES[difficulty].label}<ChevronDown size={13}/></span>}/>
-          <Board/>
+          {renderBoard()}
           <PlayerBar name="Вы" subtitle={sideLabel} avatar="ВЫ" active={game.turn() === humanColor && !finished} right={<span className={"turn-pill "+(game.turn()===humanColor&&!finished?"active":"")}>{finished ? "Партия завершена" : game.turn()===humanColor ? "Ваш ход" : thinking ? "Ход ИИ" : "Ожидание"}</span>}/>
           {game.isCheck() && !finished && <div className="check-notice"><span/> Шах вашему королю</div>}
           {engineError && <div className="error-banner">{engineError}</div>}
