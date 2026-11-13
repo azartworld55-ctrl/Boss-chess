@@ -50,7 +50,6 @@ export default function App() {
   const [reviewPly, setReviewPly] = useState(null);
   const [captureEffect, setCaptureEffect] = useState(null);
   const reduceMotion = useReducedMotion();
-  const motionEnabled = animationsEnabled && !reduceMotion;
 
   const gameRef = useRef(new Chess());
   const effectIdRef = useRef(0);
@@ -71,6 +70,7 @@ export default function App() {
   const setSoundEnabled = useGameSettings((s) => s.setSoundEnabled);
   const animationsEnabled = useGameSettings((s) => s.animationsEnabled);
   const setAnimationsEnabled = useGameSettings((s) => s.setAnimationsEnabled);
+  const motionEnabled = animationsEnabled && !reduceMotion;
   const hintsEnabled = useGameSettings((s) => s.hintsEnabled);
   const setHintsEnabled = useGameSettings((s) => s.setHintsEnabled);
   const lastMoveEnabled = useGameSettings((s) => s.lastMoveEnabled);
