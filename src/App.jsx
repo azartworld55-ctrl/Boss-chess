@@ -37,6 +37,7 @@ export default function App() {
   const [engineReady, setEngineReady] = useState(false);
   const [engineError, setEngineError] = useState("");
   const [promotion, setPromotion] = useState(null);
+  const [selectedSquare, setSelectedSquare] = useState(null);
   const [screen, setScreen] = useState("home");
   const [humanColor, setHumanColor] = useState("w");
   const [chosenSide, setChosenSide] = useState("w");
@@ -83,6 +84,7 @@ export default function App() {
     setFen(nextGame.fen());
     setHistory(nextGame.history());
     setPromotion(null);
+    setSelectedSquare(null);
     setReviewPly(null);
   }, []);
 
@@ -174,7 +176,10 @@ export default function App() {
     setEngineError("");
     setReviewPly(null);
     setScreen("game");
-    if (color === "b") beginSearch(fresh.fen());
+    if (color === "b") {
+      if (stoppingRef.current) queuedFenRef.current = fresh.fen();
+      else beginSearch(fresh.fen());
+    }
   };
   const restart = () => startGame(humanColor);
   const undo = () => {
@@ -198,7 +203,40 @@ export default function App() {
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
 
-  const renderBoard = (compact = false) => (
+  const handleSquareClick = ({ piece, square }) => {
+    if (screen !== "game" || !hintsEnabled || thinking || finished || game.turn() !== humanColor) return;
+    if (selectedSquare) {
+      const legal = game.moves({ square: selectedSquare, verbose: true });
+      if (legal.some((move) => move.to === square)) {
+        const movingPiece = game.get(selectedSquare);
+        const lastRank = humanColor === "w" ? "8" : "1";
+        if (movingPiece?.type === "p" && square[1] === lastRank) setPromotion({ from: selectedSquare, to: square });
+        else playMove(selectedSquare, square);
+        setSelectedSquare(null);
+        return;
+      }
+    }
+    if (piece && piece[0] === humanColor.toUpperCase()) setSelectedSquare(square);
+    else setSelectedSquare(null);
+  };
+  const renderBoard = (compact = false) => {
+    const squareStyles = {};
+    if (!compact && screen === "game") {
+      if (lastMoveEnabled) {
+        const lastMove = game.history({ verbose: true }).at(-1);
+        if (lastMove) {
+          squareStyles[lastMove.from] = { backgroundColor: "#dca83f55" };
+          squareStyles[lastMove.to] = { backgroundColor: "#dca83f77" };
+        }
+      }
+      if (selectedSquare) squareStyles[selectedSquare] = { backgroundColor: "#e5bd5b99", boxShadow: "inset 0 0 0 3px #f0ca70" };
+      if (selectedSquare && hintsEnabled) {
+        game.moves({ square: selectedSquare, verbose: true }).forEach((move) => {
+          squareStyles[move.to] = { background: game.get(move.to) ? "radial-gradient(transparent 54%, #dca83f88 56%)" : "radial-gradient(#dca83f88 18%, transparent 20%)" };
+        });
+      }
+    }
+    return (
     <div className="board-frame">
       <Chessboard options={{
         id: compact ? "boss-chess-home" : "boss-chess-live",
