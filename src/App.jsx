@@ -92,6 +92,12 @@ export default function App() {
         }
       } else if (message.startsWith("bestmove ")) {
         const move = message.split(/\s+/)[1];
+        if (ignoreBestMoveRef.current) {
+          ignoreBestMoveRef.current = false;
+          setThinking(false);
+          thinkingRef.current = false;
+          return;
+        }
         playEngineMove(move);
       }
     };
