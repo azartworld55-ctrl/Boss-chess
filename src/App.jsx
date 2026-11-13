@@ -244,7 +244,10 @@ export default function App() {
         boardOrientation: humanColor === "w" ? "white" : "black",
         onPieceDrop: compact || screen !== "game" ? undefined : onPieceDrop,
         allowDragging: !compact && screen === "game" && !thinking && !finished && !promotion && engineReady && game.turn() === humanColor,
-        animationDurationInMs: animationsEnabled && !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 190 : 0,
+        animationDurationInMs: 190,
+        showAnimations: animationsEnabled,
+        squareStyles,
+        onSquareClick: compact ? undefined : handleSquareClick,
         showNotation: coordinatesEnabled,
         darkSquareStyle: { backgroundColor: "#698777" },
         lightSquareStyle: { backgroundColor: "#e8deca" },
@@ -252,7 +255,8 @@ export default function App() {
       }} />
       {screen === "game" && thinking && <div className="thinking-chip"><span className="thinking-dot"/> Stockfish думает</div>}
     </div>
-  );
+    );
+  };
 
   return (
     <main className="app-shell">
