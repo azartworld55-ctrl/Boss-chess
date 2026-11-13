@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 
@@ -32,16 +32,18 @@ export default function App() {
   const [promotion, setPromotion] = useState(null);
   const [engineError, setEngineError] = useState("");
   const workerRef = useRef(null);
+  const gameRef = useRef(new Chess());
   const fenRef = useRef(fen);
   const thinkingRef = useRef(false);
   const ignoreBestMoveRef = useRef(false);
   const difficultyRef = useRef(difficulty);
   difficultyRef.current = difficulty;
 
-  const game = useMemo(() => new Chess(fen), [fen]);
+  const game = gameRef.current;
   const finished = game.isGameOver();
 
   const syncPosition = useCallback((nextGame) => {
+    gameRef.current = nextGame;
     const nextFen = nextGame.fen();
     fenRef.current = nextFen;
     setFen(nextFen);
@@ -54,7 +56,7 @@ export default function App() {
       thinkingRef.current = false;
       return;
     }
-    const current = new Chess(fenRef.current);
+    const current = gameRef.current;
     try {
       const move = {
         from: uci.slice(0, 2),
@@ -81,7 +83,7 @@ export default function App() {
         worker.postMessage("isready");
       } else if (message === "readyok") {
         setEngineReady(true);
-        const current = new Chess(fenRef.current);
+        const current = gameRef.current;
         if (current.turn() === "b" && !current.isGameOver() && !thinkingRef.current) {
           const level = LEVELS[difficultyRef.current];
           thinkingRef.current = true;
@@ -130,7 +132,7 @@ export default function App() {
 
   const makeMove = useCallback((from, to, promotionPiece = "q") => {
     if (thinkingRef.current || finished) return false;
-    const next = new Chess(fenRef.current);
+    const next = gameRef.current;
     try {
       next.move({ from, to, promotion: promotionPiece });
     } catch {
@@ -148,7 +150,7 @@ export default function App() {
 
   const onPieceDrop = useCallback(({ sourceSquare, targetSquare }) => {
     if (!sourceSquare || !targetSquare || thinkingRef.current || finished) return false;
-    const current = new Chess(fenRef.current);
+    const current = gameRef.current;
     const piece = current.get(sourceSquare);
     if (!piece || piece.color !== "w" || current.turn() !== "w") return false;
 
@@ -184,7 +186,7 @@ export default function App() {
       thinkingRef.current = false;
       setThinking(false);
     }
-    const previous = new Chess(fenRef.current);
+    const previous = gameRef.current;
     if (!previous.history().length) return;
     previous.undo();
     if (previous.turn() === "b" && previous.history().length) previous.undo();
