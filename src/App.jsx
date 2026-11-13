@@ -377,10 +377,10 @@ function PlayerBar({name,subtitle,avatar,active,right}) {
   return <div className="player-bar"><div className="player-avatar">{avatar==="SF"?<span>SF</span>:<span>{avatar}</span>}</div><div className="player-info"><strong>{name}</strong><small>{subtitle}</small></div>{right || (active?<span className="active-dot"/>:null)}</div>;
 }
 function DifficultyControl({elo,onChange}) {
-  const presets=[400,800,1200,1800,2600];
+  const presets=[100,300,600,900,1200,1800,2600];
   const [draft,setDraft]=useState(String(elo));
   useEffect(()=>setDraft(String(elo)),[elo]);
-  const applyDraft=()=>{const value=Number(draft);if(Number.isFinite(value)&&value>=400&&value<=3190)onChange(Math.round(value/10)*10);else setDraft(String(elo));};
+  const applyDraft=()=>{const value=Number(draft);if(Number.isFinite(value)&&value>=100&&value<=3190)onChange(Math.round(value/10)*10);else setDraft(String(elo));};
   const choose=value=>{setDraft(String(value));onChange(value);};
   return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="100" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>100 · Очень легко</span><span>3190 · Максимум</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="100" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
 }
