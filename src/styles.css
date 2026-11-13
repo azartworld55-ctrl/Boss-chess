@@ -182,3 +182,27 @@ body{overscroll-behavior:none}
   .settings-group{padding:13px}
   .theme-swatch{height:60px}
 }
+
+.campaign-home-button{position:relative;width:100%;min-height:68px;display:flex;align-items:center;gap:12px;padding:0 18px;border:1px solid #5b4b2d;border-radius:16px;background:linear-gradient(110deg,#282319,#1a1b20 70%);font-size:16px;font-weight:700;text-align:left;cursor:pointer}
+.campaign-home-button span{margin-left:auto;color:var(--gold-light);font-size:11px;font-weight:500}
+.campaign-home-button svg{color:var(--gold)}
+.campaign-screen{padding:14px 0 20px;gap:10px;overflow-y:auto;overscroll-behavior:contain}
+.campaign-opponent{display:flex;align-items:center;gap:12px;min-height:70px;padding:9px 12px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+.campaign-opponent img,.campaign-intro img{width:56px;height:56px;object-fit:cover;object-position:center 20%;border-radius:12px;border:1px solid #69533c}
+.campaign-unknown{width:56px;height:56px;display:grid;place-items:center;border-radius:12px;background:#28242d;color:var(--gold);font:700 27px Manrope,sans-serif}
+.campaign-opponent>div:nth-child(2){display:flex;flex-direction:column;gap:3px;min-width:0}
+.campaign-opponent strong{font:700 17px Manrope,sans-serif}
+.campaign-opponent small{color:var(--muted);font-size:10px}
+.campaign-counter{margin-left:auto;text-align:right;white-space:nowrap}
+.campaign-counter b{display:block;color:var(--gold);font:700 18px Manrope,sans-serif}
+.campaign-board{width:min(100%,calc(100dvh - 365px));max-height:calc(100dvh - 345px);flex:0 1 auto}
+.campaign-status{padding:10px 13px;border:1px solid #4a3c27;border-radius:12px;background:#252117;color:var(--gold-light);text-align:center;font-size:13px;font-weight:600}
+.campaign-rules{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:var(--surface);font-size:11px;color:#c4c2bc;line-height:1.4}
+.campaign-rules b{color:var(--gold);font-size:12px}
+.campaign-footnote{margin:0;color:var(--muted);font-size:10px;line-height:1.45;text-align:center}
+.campaign-intro{position:fixed;z-index:30;inset:0;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:28px; background:#111116f5;backdrop-filter:blur(10px)}
+.campaign-intro>div{display:flex;align-items:center;gap:14px}
+.campaign-intro img{width:82px;height:82px}
+.campaign-intro h2{margin:4px 0;font:800 28px Manrope,sans-serif;color:var(--gold)}
+.campaign-intro p{color:#e5e0d8;font-size:15px;line-height:1.5}
+@media(max-height:720px){.campaign-screen{gap:6px;padding-top:6px}.campaign-board{width:min(100%,calc(100dvh - 325px));max-height:calc(100dvh - 315px)}.campaign-opponent{min-height:58px}.campaign-opponent img,.campaign-unknown{width:46px;height:46px}}
