@@ -39,6 +39,7 @@ export default function App() {
   const [promotion, setPromotion] = useState(null);
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [screen, setScreen] = useState("home");
+  const [settingsReturn, setSettingsReturn] = useState("home");
   const [humanColor, setHumanColor] = useState("w");
   const [chosenSide, setChosenSide] = useState("w");
   const [reviewPly, setReviewPly] = useState(null);
@@ -199,6 +200,7 @@ export default function App() {
   };
   const changeDifficulty = (value) => { setDifficulty(value); toast("Сложность сохранена"); };
   const openReview = (ply) => { setReviewPly(ply); setScreen("review"); };
+  const openSettings = () => { setSettingsReturn(screen); setScreen("settings"); };
   const boardPosition = screen === "review" ? displayedGame || fen : fen;
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
@@ -266,7 +268,7 @@ export default function App() {
         <button className="wordmark" onClick={() => setScreen("home")} aria-label="Главное меню">
           <span className="brand-crown"><Crown size={19}/></span><span>BOSS <b>CHESS</b></span>
         </button>
-        <button className="header-settings" onClick={() => setScreen("settings")} aria-label="Настройки"><SlidersHorizontal size={20}/></button>
+        <button className="header-settings" onClick={openSettings} aria-label="Настройки"><SlidersHorizontal size={20}/></button>
       </header>
 
       <AnimatePresence mode="wait">
@@ -323,7 +325,7 @@ export default function App() {
         </MotionDiv>}
 
         {screen === "settings" && <MotionDiv className="screen sub-screen" key="settings" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
-          <ScreenTitle title="Настройки" onBack={() => setScreen("game")}/>
+          <ScreenTitle title="Настройки" onBack={() => setScreen(settingsReturn)}/>
           <DifficultyControl difficulty={difficulty} onChange={changeDifficulty}/>
           <section className="settings-group"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></section>
           <section className="settings-group"><h2>ОБЩЕЕ</h2><SettingToggle label="Звуки" checked={soundEnabled} onChange={setSoundEnabled}/><SettingToggle label="Анимации" checked={animationsEnabled} onChange={setAnimationsEnabled}/></section>
