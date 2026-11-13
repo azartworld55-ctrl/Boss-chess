@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  ArrowLeft, ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight,
+  ArrowLeft, ChevronRight, ChevronsLeft, ChevronsRight,
   Crown, List, Play, RotateCcw, Settings2, SlidersHorizontal,
   Undo2, Check
 } from "lucide-react";
