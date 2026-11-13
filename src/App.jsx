@@ -34,6 +34,9 @@ export default function App() {
   const workerRef = useRef(null);
   const fenRef = useRef(fen);
   const thinkingRef = useRef(false);
+  const ignoreBestMoveRef = useRef(false);
+  const difficultyRef = useRef(difficulty);
+  difficultyRef.current = difficulty;
 
   const game = useMemo(() => new Chess(fen), [fen]);
   const finished = game.isGameOver();
@@ -80,7 +83,7 @@ export default function App() {
         setEngineReady(true);
         const current = new Chess(fenRef.current);
         if (current.turn() === "b" && !current.isGameOver() && !thinkingRef.current) {
-          const level = LEVELS[difficulty];
+          const level = LEVELS[difficultyRef.current];
           thinkingRef.current = true;
           setThinking(true);
           worker.postMessage("setoption name Skill Level value " + level.skill);
@@ -106,7 +109,7 @@ export default function App() {
       worker.terminate();
       workerRef.current = null;
     };
-  }, [playEngineMove, difficulty]);
+  }, [playEngineMove]);
 
   const requestComputerMove = useCallback((positionFen) => {
     const worker = workerRef.current;
@@ -156,7 +159,10 @@ export default function App() {
   }, [finished, makeMove]);
 
   const restart = () => {
-    workerRef.current?.postMessage("stop");
+    if (thinkingRef.current) {
+      ignoreBestMoveRef.current = true;
+      workerRef.current?.postMessage("stop");
+    }
     thinkingRef.current = false;
     setThinking(false);
     setPromotion(null);
@@ -167,6 +173,7 @@ export default function App() {
 
   const undo = () => {
     if (thinkingRef.current) {
+      ignoreBestMoveRef.current = true;
       workerRef.current?.postMessage("stop");
       thinkingRef.current = false;
       setThinking(false);
