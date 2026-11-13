@@ -306,7 +306,12 @@ export default function App() {
 
       <AnimatePresence mode="wait">
         {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={motionEnabled ? {opacity:0,y:-6} : {opacity:0}} transition={{duration:motionEnabled ? 0.18 : 0}}>
-          <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Продумайте каждый ход.</p></div></div>
+          <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Классические шахматы. Один достойный соперник.</p></div></div>
+          <div className="home-highlights">
+            <span><i className="home-highlight-dot"/> Stockfish 19</span>
+            <span>Классические правила</span>
+            <span>Один на один</span>
+          </div>
           <div className="home-board">{renderBoard(true)}</div>
           <div className="home-actions">
             {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {elo} Elo</small></span><ChevronRight className="continue-arrow"/></button>}
@@ -316,10 +321,10 @@ export default function App() {
 
         {screen === "new" && <MotionDiv className="screen sub-screen" key="new" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionEnabled ? 0.18 : 0}}>
           <ScreenTitle title="Новая партия" onBack={() => setScreen("home")}/>
-          <section className="form-section"><h2>ВАША СТОРОНА</h2><div className="side-options">
+          <section className="form-section"><h2>ВЫБЕРИТЕ СТОРОНУ</h2><p className="section-hint">За какие фигуры будете играть?</p><div className="side-options">
             {[["w","♔","Белые"],["b","♚","Чёрные"],["random","?","Случайно"]].map(([value,symbol,label]) => <button key={value} className={"side-option "+(chosenSide===value?"selected":"")} onClick={() => setChosenSide(value)}><span>{symbol}</span><b>{label}</b>{chosenSide===value && <i><Check size={13}/></i>}</button>)}
           </div></section>
-          <DifficultyControl elo={elo} onChange={changeElo}/>
+          <DifficultyControl elo={elo} onChange={changeElo} helperText="Этот уровень будет использоваться в новой партии."/>
           <div className="bottom-actions"><button className="gold-button" onClick={() => startGame(chosenSide)}>Начать партию</button>{history.length > 0 && <button className="text-button" onClick={() => setScreen("game")}>Вернуться к текущей партии</button>}</div>
         </MotionDiv>}
 
@@ -335,7 +340,7 @@ export default function App() {
             <button onClick={undo} disabled={!history.length || thinking}><Undo2/><span>Отмена</span></button>
             <button onClick={restart}><RotateCcw/><span>Заново</span></button>
             <button onClick={() => setScreen("history")}><List/><span>История</span></button>
-            <button onClick={() => setScreen("settings")}><SlidersHorizontal/><span>Настройки</span></button>
+            <button onClick={openSettings}><SlidersHorizontal/><span>Настройки</span></button>
           </div>
           {finished && <MotionDiv className="result-card" initial={motionEnabled ? { opacity: 0, y: 18 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionEnabled ? .2 : 0, ease: "easeOut" }}><span className="eyebrow">КОНЕЦ ПАРТИИ</span><h2>{game.isCheckmate() ? (game.turn()===humanColor?"Мат":"Победа") : "Ничья"}</h2><p>{status}</p><div><button className="outline-button" onClick={() => setScreen("home")}>В меню</button><button className="gold-button" onClick={restart}>Реванш</button></div></MotionDiv>}
           <AnimatePresence>{promotion && <MotionDiv className="promotion-panel" initial={motionEnabled ? { opacity: 0, y: -12 } : false} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: motionEnabled ? .18 : 0, ease: "easeOut" }}><h2>ВО ЧТО ПРЕВРАТИТЬ ПЕШКУ</h2><div>{PIECES.map(([piece,symbol,label])=><button key={piece} onClick={()=>playMove(promotion.from,promotion.to,piece)}><span>{symbol}</span>{label}</button>)}</div></MotionDiv>}</AnimatePresence>
@@ -359,11 +364,13 @@ export default function App() {
 
         {screen === "settings" && <MotionDiv className="screen sub-screen" key="settings" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
           <ScreenTitle title="Настройки" onBack={() => setScreen(settingsReturn)}/>
-          <DifficultyControl elo={elo} onChange={changeElo}/>
-          <section className="settings-group"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></section>
-          <section className="settings-group"><h2>ОБЩЕЕ</h2><SettingToggle label="Звуки" checked={soundEnabled} onChange={setSoundEnabled}/><SettingToggle label="Анимации" checked={animationsEnabled} onChange={setAnimationsEnabled}/></section>
-          <section className="settings-group"><h2>ЦВЕТ ДОСКИ</h2><div className="board-themes">{[["classic","Классическая"],["green","Зелёная"],["blue","Синяя"]].map(([key,label])=><button key={key} className={"theme-swatch "+key+(boardTheme===key?" selected":"")} aria-label={label} aria-pressed={boardTheme===key} onClick={()=>setBoardTheme(key)}/>)}</div></section>
-          <p className="helper-text">Настройки сохраняются на этом устройстве.</p>
+          <DifficultyControl elo={elo} onChange={changeElo} helperText={settingsReturn === "game" ? "Новое значение начнёт действовать со следующего хода Stockfish. Уже начатый расчёт не изменится." : "Уровень силы для следующей партии."}/>
+          <div className="settings-layout">
+            <section className="settings-group"><div className="settings-group-heading"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><p>Что показывать во время игры</p></div><div className="settings-options"><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></div></section>
+            <section className="settings-group"><div className="settings-group-heading"><h2>ЗВУК И ДВИЖЕНИЕ</h2><p>Звуковое и визуальное оформление</p></div><div className="settings-options"><SettingToggle label="Звуки" checked={soundEnabled} onChange={setSoundEnabled}/><SettingToggle label="Анимации" checked={animationsEnabled} onChange={setAnimationsEnabled}/></div></section>
+            <section className="settings-group"><div className="settings-group-heading"><h2>ЦВЕТ ДОСКИ</h2><p>Выберите оформление клеток</p></div><div className="board-themes">{[["classic","Классическая"],["green","Зелёная"],["blue","Синяя"]].map(([key,label]) => <button key={key} className={"theme-swatch "+key+(boardTheme===key?" selected":"")} aria-label={label} aria-pressed={boardTheme===key} onClick={()=>setBoardTheme(key)}><span>{label}</span></button>)}</div></section>
+          </div>
+          <p className="helper-text settings-footnote">Настройки сохраняются на этом устройстве.</p>
         </MotionDiv>}
       </AnimatePresence>
     </main>
@@ -376,13 +383,13 @@ function ScreenTitle({title,onBack}) {
 function PlayerBar({name,subtitle,avatar,active,right}) {
   return <div className="player-bar"><div className="player-avatar">{avatar==="SF"?<span>SF</span>:<span>{avatar}</span>}</div><div className="player-info"><strong>{name}</strong><small>{subtitle}</small></div>{right || (active?<span className="active-dot"/>:null)}</div>;
 }
-function DifficultyControl({elo,onChange}) {
+function DifficultyControl({elo,onChange,helperText}) {
   const presets=[100,300,600,900,1200,1800,2600];
   const [draft,setDraft]=useState(String(elo));
   useEffect(()=>setDraft(String(elo)),[elo]);
   const applyDraft=()=>{const value=Number(draft);if(Number.isFinite(value)&&value>=100&&value<=3190)onChange(Math.round(value/10)*10);else setDraft(String(elo));};
   const choose=value=>{setDraft(String(value));onChange(value);};
-  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="100" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>100 · Очень легко</span><span>3190 · Максимум</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="100" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
+  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Уровень сложности</small></div>{helperText && <p className="difficulty-context">{helperText}</p>}<input aria-label="Рейтинг Stockfish Elo" type="range" min="100" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>100 · Очень легко</span><span>3190 · Максимум</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="100" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
 }
 function SettingToggle({label,checked,onChange}) {
   return <label className="setting-toggle"><span>{label}</span><input type="checkbox" checked={Boolean(checked)} onChange={e=>onChange(e.target.checked)}/><i/></label>;
