@@ -326,7 +326,7 @@ export default function App() {
                 {moves.map((move) => <motion.li key={move.number} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: "easeOut" }}>
                   <span className="move-index">{move.number.toString().padStart(2,"0")}</span>
                   <span>{move.white}</span><span>{move.black}</span>
-                </li>)}
+                </motion.li>)}
               </ol>}
           </section>
           {engineError && <div className="error-banner" role="alert">{engineError}</div>}
