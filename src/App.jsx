@@ -275,7 +275,7 @@ export default function App() {
         boardStyle: { borderRadius: "13px", overflow: "hidden" },
       }} />
       {screen === "game" && checkedKing && motionEnabled && <MotionDiv key={`check-${fen}-${checkedKing}`} className="check-square-effect" style={{ left: `${(humanColor === "w" ? checkedKing.charCodeAt(0)-97 : 7-(checkedKing.charCodeAt(0)-97))*12.5}%`, top: `${(humanColor === "w" ? 8-Number(checkedKing[1]) : Number(checkedKing[1])-1)*12.5}%` }} initial={{ opacity: 0, scale: .88 }} animate={{ opacity: [0, .9, .15, .9, .15], scale: [0.88, 1, .96, 1, .96] }} transition={{ duration: 1.8, times: [0, .16, .42, .68, 1], ease: "easeOut" }} />}
-      <AnimatePresence>{screen === "game" && captureEffect && motionEnabled && <MotionDiv key={captureEffect.id} className="capture-burst" style={{ left: `${(humanColor === "w" ? captureEffect.square.charCodeAt(0)-97 : 7-(captureEffect.square.charCodeAt(0)-97))*12.5}%`, top: `${(humanColor === "w" ? 8-Number(captureEffect.square[1]) : Number(captureEffect.square[1])-1)*12.5}%` }} initial={{ opacity: 0, scale: .65 }} animate={{ opacity: [0, 1, 0], scale: [0.65, 1.2, 1.5] }} exit={{ opacity: 0 }} transition={{ duration: .3, ease: "easeOut" }} />}</AnimatePresence>
+      <AnimatePresence>{screen === "game" && captureEffect && motionEnabled && <MotionDiv key={captureEffect.id} className="capture-burst" style={{ left: `${(humanColor === "w" ? captureEffect.square.charCodeAt(0)-97 : 7-(captureEffect.square.charCodeAt(0)-97))*12.5}%`, top: `${(humanColor === "w" ? 8-Number(captureEffect.square[1]) : Number(captureEffect.square[1])-1)*12.5}%` }} initial={{ opacity: 0, scale: .65 }} animate={{ opacity: [0, 1, 0], scale: [0.65, 1.2, 1.5] }} exit={{ opacity: 0 }} transition={{ duration: .3, ease: "easeOut" }} onAnimationComplete={() => setCaptureEffect(null)} />}</AnimatePresence>
       {screen === "game" && thinking && <div className="thinking-chip"><span className="thinking-dot"/> Stockfish думает</div>}
     </div>
     );
@@ -292,7 +292,7 @@ export default function App() {
       </header>
 
       <AnimatePresence mode="wait">
-        {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}>
+        {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={motionEnabled ? {opacity:0,y:-6} : {opacity:0}} transition={{duration:motionEnabled?.18:0}}>
           <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Продумайте каждый ход.</p></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
           <div className="home-board">{renderBoard(true)}</div>
           <div className="home-actions">
@@ -301,7 +301,7 @@ export default function App() {
           </div>
         </MotionDiv>}
 
-        {screen === "new" && <MotionDiv className="screen sub-screen" key="new" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
+        {screen === "new" && <MotionDiv className="screen sub-screen" key="new" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:motionEnabled?.18:0}}>
           <ScreenTitle title="Новая партия" onBack={() => setScreen("home")}/>
           <section className="form-section"><h2>ВАША СТОРОНА</h2><div className="side-options">
             {[["w","♔","Белые"],["b","♚","Чёрные"],["random","?","Случайно"]].map(([value,symbol,label]) => <button key={value} className={"side-option "+(chosenSide===value?"selected":"")} onClick={() => setChosenSide(value)}><span>{symbol}</span><b>{label}</b>{chosenSide===value && <i><Check size={13}/></i>}</button>)}
@@ -310,7 +310,7 @@ export default function App() {
           <div className="bottom-actions"><button className="gold-button" onClick={() => startGame(chosenSide)}>Начать партию</button>{history.length > 0 && <button className="text-button" onClick={() => setScreen("game")}>Вернуться к текущей партии</button>}</div>
         </MotionDiv>}
 
-        {screen === "game" && <MotionDiv className="screen game-screen" key="game" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+        {screen === "game" && <MotionDiv className="screen game-screen" key="game" initial={motionEnabled ? {opacity:0} : false} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:motionEnabled?.18:0}}>
           <div className="game-topline"><button className="round-icon" onClick={() => setScreen("home")} aria-label="В меню"><ArrowLeft/></button><div className="game-title"><span className="eyebrow">BOSS CHESS</span><strong>Партия</strong></div><button className="round-icon" onClick={() => setScreen("settings")} aria-label="Настройки"><Settings2/></button></div>
           <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF" active={thinking || (game.turn() !== humanColor && !finished)} right={<span className="elo-chip">{elo} Elo</span>}/>
           {renderBoard()}
