@@ -27,6 +27,8 @@ test("mobile layout has no horizontal overflow", async ({ page }) => {
 });
 
 test("basic accessibility scan", async ({ page }) => {
+  // Avoid scanning mid-transition; reduced motion also validates the accessible fallback.
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   // react-chessboard renders drag handles without accessible names; scan the surrounding UI.
   const results = await new AxeBuilder({ page }).exclude(".board-wrap").analyze();
