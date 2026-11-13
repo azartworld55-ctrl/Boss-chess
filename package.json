@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.0",
@@ -29,6 +30,8 @@
     "stockfish": "^19.0.1",
     "vite": "^7.1.2",
     "vite-plugin-static-copy": "^3.1.4",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "@playwright/test": "^1.52.0",
+    "@axe-core/playwright": "^4.10.0"
   }
 }
