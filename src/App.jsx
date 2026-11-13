@@ -354,7 +354,11 @@ function PlayerBar({name,subtitle,avatar,active,right}) {
 }
 function DifficultyControl({elo,onChange}) {
   const presets=[1400,1800,2200,2600,3000];
-  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="1320" max="3190" step="10" value={elo} onChange={e=>onChange(Number(e.target.value))}/><div className="range-labels"><span>1320</span><span>3190</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="1320" max="3190" step="10" value={elo} onChange={e=>onChange(Number(e.target.value))}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>onChange(value)}>{value}</button>)}</div></div></section>;
+  const [draft,setDraft]=useState(String(elo));
+  useEffect(()=>setDraft(String(elo)),[elo]);
+  const applyDraft=()=>{const value=Number(draft);if(Number.isFinite(value)&&value>=1320&&value<=3190)onChange(Math.round(value/10)*10);else setDraft(String(elo));};
+  const choose=value=>{setDraft(String(value));onChange(value);};
+  return <section className="difficulty-section"><h2>СИЛА STOCKFISH</h2><div className="difficulty-panel"><div className="difficulty-value"><strong>{elo}</strong><span>Elo</span><small>Ограничение силы движка</small></div><input aria-label="Рейтинг Stockfish Elo" type="range" min="1320" max="3190" step="10" value={elo} onChange={e=>choose(Number(e.target.value))}/><div className="range-labels"><span>1320</span><span>3190</span></div><div className="elo-number"><label htmlFor="elo-number">Точное значение</label><input id="elo-number" type="number" min="1320" max="3190" step="10" value={draft} onChange={e=>setDraft(e.target.value)} onBlur={applyDraft} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur();}}/></div><div className="difficulty-presets">{presets.map(value=><button key={value} className={elo===value?"selected":""} onClick={()=>choose(value)}>{value}</button>)}</div></div></section>;
 }
 function SettingToggle({label,checked,onChange}) {
   return <label className="setting-toggle"><span>{label}</span><input type="checkbox" checked={Boolean(checked)} onChange={e=>onChange(e.target.checked)}/><i/></label>;
