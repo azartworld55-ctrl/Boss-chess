@@ -115,3 +115,70 @@ body{overscroll-behavior:none}
   .promotion-panel button{transition:none}
   .promotion-panel,.result-card{will-change:auto}
 }
+
+
+/* Refined home and settings hierarchy */
+.home-heading h1{letter-spacing:-1.8px}
+.home-highlights{
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;
+  margin:2px auto 4px;
+}
+.home-highlights span{
+  display:inline-flex;align-items:center;gap:7px;min-height:30px;padding:0 11px;
+  border:1px solid #30323b;border-radius:99px;background:#191a1f;
+  color:#b9bbc2;font-size:10px;font-weight:600;letter-spacing:.15px;
+}
+.home-highlight-dot{width:6px;height:6px;border-radius:50%;background:#83b48f;box-shadow:0 0 8px #83b48f66}
+.home-board{margin-top:8px;margin-bottom:20px}
+.section-hint{margin:-5px 0 13px;color:var(--muted);font-size:12px}
+.side-options{gap:9px}
+.side-option{min-height:86px;gap:5px;border-width:1px;border-radius:15px}
+.side-option>span{font-size:29px;line-height:1.05}
+.side-option b{font-size:13px}
+.side-option i{right:7px;top:7px;width:18px;height:18px}
+.settings-layout{display:grid;grid-template-columns:1fr;gap:12px}
+.settings-group{
+  margin:0;padding:16px;background:var(--surface);
+  border:1px solid var(--line);border-radius:17px;
+}
+.settings-group-heading{margin-bottom:10px}
+.settings-group-heading h2{margin:0 0 4px;color:#d6d1c6;font-size:10px;letter-spacing:1.7px}
+.settings-group-heading p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
+.settings-options{display:flex;flex-direction:column;gap:6px}
+.settings-options .setting-toggle{
+  min-height:48px;padding:0 12px;border:1px solid #30323b;border-radius:11px;
+  background:#202127;font-size:13px;
+}
+.settings-options .setting-toggle:first-of-type,
+.settings-options .setting-toggle:last-of-type,
+.settings-options .setting-toggle:only-of-type{border:1px solid #30323b;border-radius:11px}
+.settings-options .setting-toggle i{width:42px;height:24px}
+.settings-options .setting-toggle i:after{width:18px;height:18px}
+.settings-options .setting-toggle input:checked+i:after{transform:translateX(18px)}
+.board-themes{gap:9px}
+.theme-swatch{
+  position:relative;height:66px;display:flex;align-items:flex-end;justify-content:center;
+  padding:0 3px 7px;border-width:2px;overflow:hidden;
+}
+.theme-swatch span{
+  max-width:100%;padding:4px 6px;border-radius:6px;
+  background:#15161bdc;color:#f1eee7;font-size:9px;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.theme-swatch.selected span{color:var(--gold-light)}
+.difficulty-context{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.45}
+.settings-footnote{margin:12px 2px 4px}
+@media(min-width:620px){
+  .settings-layout{grid-template-columns:1fr 1fr}
+  .settings-layout .settings-group:last-child{grid-column:1/-1}
+  .home-highlights{gap:10px}
+}
+@media(max-width:420px){
+  .home-highlights{gap:6px}
+  .home-highlights span{min-height:27px;padding:0 8px;font-size:9px}
+  .side-option{min-height:78px}
+  .side-option>span{font-size:26px}
+  .side-option b{font-size:12px}
+  .settings-group{padding:13px}
+  .theme-swatch{height:60px}
+}
