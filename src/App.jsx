@@ -53,6 +53,7 @@ export default function App() {
 
   const gameRef = useRef(new Chess());
   const effectIdRef = useRef(0);
+  const motionEnabledRef = useRef(true);
   const workerRef = useRef(null);
   const thinkingRef = useRef(false);
   const readyRef = useRef(false);
@@ -71,6 +72,7 @@ export default function App() {
   const animationsEnabled = useGameSettings((s) => s.animationsEnabled);
   const setAnimationsEnabled = useGameSettings((s) => s.setAnimationsEnabled);
   const motionEnabled = animationsEnabled && !reduceMotion;
+  motionEnabledRef.current = motionEnabled;
   const hintsEnabled = useGameSettings((s) => s.hintsEnabled);
   const setHintsEnabled = useGameSettings((s) => s.setHintsEnabled);
   const lastMoveEnabled = useGameSettings((s) => s.lastMoveEnabled);
@@ -98,8 +100,8 @@ export default function App() {
     setPromotion(null);
     setSelectedSquare(null);
     setReviewPly(null);
-    setCaptureEffect(motionEnabled && moveInfo?.captured ? { square: moveInfo.to, id: ++effectIdRef.current } : null);
-  }, [motionEnabled]);
+    setCaptureEffect(motionEnabledRef.current && moveInfo?.captured ? { square: moveInfo.to, id: ++effectIdRef.current } : null);
+  }, []);
 
   const beginSearch = useCallback((positionFen) => {
     const worker = workerRef.current;
