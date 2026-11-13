@@ -85,3 +85,14 @@
 @media (prefers-reduced-motion: reduce) {
   .board-event { display: none; }
 }
+
+
+/* Keep the Radix dialog centered: animate opacity without overriding its translate transform. */
+@keyframes boss-dialog-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.settings-dialog { animation: boss-dialog-in .2s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .settings-dialog { animation: none !important; }
+}
