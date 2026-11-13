@@ -8,6 +8,7 @@ import { Toaster, toast } from "sonner";
 import { DIFFICULTIES, useGameSettings } from "./store/useGameSettings.js";
 
 const ENGINE_PATH = "stockfish/stockfish-19-lite-single.js";
+const MotionDiv = motion.div;
 
 function getGameStatus(game, thinking, ready) {
   if (game.isCheckmate()) return game.turn() === "w" ? "Мат. Победил компьютер." : "Мат! Ты победил.";
@@ -276,9 +277,9 @@ export default function App() {
               boardStyle: { borderRadius: "8px", overflow: "hidden" },
             }}/>
             <AnimatePresence>
-              {thinking && <motion.div className="thinking-overlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+              {thinking && <MotionDiv className="thinking-overlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
                 <span className="thinking-dot"/><span>Компьютер думает</span>
-              </motion.div>}
+              </MotionDiv>}
             </AnimatePresence>
           </div>
 
@@ -289,14 +290,14 @@ export default function App() {
           </div>
 
           <AnimatePresence>
-            {promotion && <motion.div className="promotion-panel" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}}>
+            {promotion && <MotionDiv className="promotion-panel" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}}>
               <strong>Выбери фигуру для превращения</strong>
               <div className="promotion-grid">
                 {[["q","♕","Ферзь"],["r","♖","Ладья"],["b","♗","Слон"],["n","♘","Конь"]].map(([piece,symbol,label]) =>
                   <button key={piece} onClick={() => playMove(promotion.from,promotion.to,piece)}><span>{symbol}</span>{label}</button>
                 )}
               </div>
-            </motion.div>}
+            </MotionDiv>}
           </AnimatePresence>
         </div>
 
