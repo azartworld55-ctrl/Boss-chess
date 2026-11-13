@@ -55,7 +55,7 @@ body{overscroll-behavior:none}
   margin:0 auto;
   aspect-ratio:1;
 }
-.board-frame>div{width:100%!important;height:100%!important}
+.board-frame>div[id$="-board"]{width:100%!important;height:100%!important}
 .game-controls{margin-top:0}
 .game-controls button{min-height:clamp(56px,8.5vh,72px)}
 .notation-strip{min-height:42px;max-height:48px;padding:11px 14px}
