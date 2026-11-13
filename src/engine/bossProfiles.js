@@ -16,9 +16,9 @@ export const BOSS_PROFILES = {
 
 export function parseUciInfo(line) {
   if (typeof line !== "string" || !line.startsWith("info ")) return null;
-  const depth = Number(line.match(/\bdepth (\\d+)/)?.[1] || 0);
-  const multipv = Number(line.match(/\bmultipv (\\d+)/)?.[1] || 1);
-  const scoreMatch = line.match(/\bscore (cp|mate) (-?\\d+)/);
+  const depth = Number(line.match(/\bdepth (\d+)/)?.[1] || 0);
+  const multipv = Number(line.match(/\bmultipv (\d+)/)?.[1] || 1);
+  const scoreMatch = line.match(/\bscore (cp|mate) (-?\d+)/);
   const pvMatch = line.match(/\bpv (.+)$/);
   if (!pvMatch) return null;
   return {
