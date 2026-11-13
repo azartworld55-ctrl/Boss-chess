@@ -1,0 +1,40 @@
+name: Quality checks
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Dependency audit summary
+        run: |
+          npm audit --json > audit.json || true
+          node -e "const a=require('./audit.json'); for (const [n,v] of Object.entries(a.vulnerabilities || {})) console.log(n, v.severity, v.fixAvailable)"
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  browser-tests:
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:e2e

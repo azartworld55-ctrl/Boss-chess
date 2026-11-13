@@ -1,23 +1,37 @@
 {
   "name": "boss-chess",
   "private": true,
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest run src/game.test.js",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.0",
     "chess.js": "^1.4.0",
+    "lucide-react": "^0.468.0",
+    "motion": "^12.0.0",
     "react": "^19.1.1",
     "react-chessboard": "^5.12.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "sonner": "^2.0.0",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
     "stockfish": "^19.0.1",
     "vite": "^7.1.2",
-    "vite-plugin-static-copy": "^3.1.4"
+    "vite-plugin-static-copy": "^3.1.4",
+    "vitest": "^5.1.0",
+    "@playwright/test": "^1.52.0",
+    "@axe-core/playwright": "^4.10.0"
   }
 }
