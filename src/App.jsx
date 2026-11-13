@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowLeft, ChevronRight, ChevronsLeft, ChevronsRight,
   Crown, List, Play, RotateCcw, Settings2, SlidersHorizontal,
@@ -48,8 +48,12 @@ export default function App() {
   const [humanColor, setHumanColor] = useState("w");
   const [chosenSide, setChosenSide] = useState("w");
   const [reviewPly, setReviewPly] = useState(null);
+  const [captureEffect, setCaptureEffect] = useState(null);
+  const reduceMotion = useReducedMotion();
+  const motionEnabled = animationsEnabled && !reduceMotion;
 
   const gameRef = useRef(new Chess());
+  const effectIdRef = useRef(0);
   const workerRef = useRef(null);
   const thinkingRef = useRef(false);
   const readyRef = useRef(false);
@@ -87,14 +91,15 @@ export default function App() {
     return replay.fen();
   }, [history, reviewPly]);
 
-  const syncGame = useCallback((nextGame) => {
+  const syncGame = useCallback((nextGame, moveInfo = null) => {
     gameRef.current = nextGame;
     setFen(nextGame.fen());
     setHistory(nextGame.history());
     setPromotion(null);
     setSelectedSquare(null);
     setReviewPly(null);
-  }, []);
+    setCaptureEffect(motionEnabled && moveInfo?.captured ? { square: moveInfo.to, id: ++effectIdRef.current } : null);
+  }, [motionEnabled]);
 
   const beginSearch = useCallback((positionFen) => {
     const worker = workerRef.current;
@@ -130,8 +135,9 @@ export default function App() {
   const playMove = useCallback((from, to, promotionPiece = "q") => {
     if (thinkingRef.current || gameRef.current.isGameOver() || gameRef.current.turn() !== humanColorRef.current) return false;
     const current = gameRef.current;
-    try { current.move({ from, to, promotion: promotionPiece }); } catch { return false; }
-    syncGame(current);
+    let moveInfo;
+    try { moveInfo = current.move({ from, to, promotion: promotionPiece }); } catch { return false; }
+    syncGame(current, moveInfo);
     if (!current.isGameOver()) beginSearch(current.fen());
     return true;
   }, [beginSearch, syncGame]);
@@ -162,8 +168,8 @@ export default function App() {
         if (!uci || uci === "(none)" || uci === "0000") return;
         const current = gameRef.current;
         try {
-          current.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(uci.length > 4 ? { promotion: uci[4].toLowerCase() } : {}) });
-          syncGame(current);
+          const moveInfo = current.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), ...(uci.length > 4 ? { promotion: uci[4].toLowerCase() } : {}) });
+          syncGame(current, moveInfo);
         } catch { setEngineError("Stockfish вернул некорректный ход. Начните новую партию."); }
       }
     };
@@ -233,6 +239,9 @@ export default function App() {
   const renderBoard = (compact = false) => {
     const palette = BOARD_THEMES[boardTheme] || BOARD_THEMES.classic;
     const squareStyles = {};
+    const checkedKing = !compact && screen === "game" && game.isCheck()
+      ? game.board().flat().find((piece) => piece?.type === "k" && piece.color === game.turn())?.square
+      : null;
     if (!compact && screen === "game") {
       if (lastMoveEnabled) {
         const lastMove = game.history({ verbose: true }).at(-1);
@@ -257,7 +266,7 @@ export default function App() {
         onPieceDrop: compact || screen !== "game" ? undefined : onPieceDrop,
         allowDragging: !compact && screen === "game" && !thinking && !finished && !promotion && engineReady && game.turn() === humanColor,
         animationDurationInMs: 190,
-        showAnimations: animationsEnabled,
+        showAnimations: motionEnabled,
         squareStyles,
         onSquareClick: compact ? undefined : handleSquareClick,
         showNotation: coordinatesEnabled,
@@ -265,6 +274,8 @@ export default function App() {
         lightSquareStyle: { backgroundColor: palette.light },
         boardStyle: { borderRadius: "13px", overflow: "hidden" },
       }} />
+      {screen === "game" && checkedKing && motionEnabled && <MotionDiv key={`check-${fen}-${checkedKing}`} className="check-square-effect" style={{ left: `${(humanColor === "w" ? checkedKing.charCodeAt(0)-97 : 7-(checkedKing.charCodeAt(0)-97))*12.5}%`, top: `${(humanColor === "w" ? 8-Number(checkedKing[1]) : Number(checkedKing[1])-1)*12.5}%` }} initial={{ opacity: 0, scale: .88 }} animate={{ opacity: [0, .9, .15, .9, .15], scale: [0.88, 1, .96, 1, .96] }} transition={{ duration: 1.8, times: [0, .16, .42, .68, 1], ease: "easeOut" }} />}
+      <AnimatePresence>{screen === "game" && captureEffect && motionEnabled && <MotionDiv key={captureEffect.id} className="capture-burst" style={{ left: `${(humanColor === "w" ? captureEffect.square.charCodeAt(0)-97 : 7-(captureEffect.square.charCodeAt(0)-97))*12.5}%`, top: `${(humanColor === "w" ? 8-Number(captureEffect.square[1]) : Number(captureEffect.square[1])-1)*12.5}%` }} initial={{ opacity: 0, scale: .65 }} animate={{ opacity: [0, 1, 0], scale: [0.65, 1.2, 1.5] }} exit={{ opacity: 0 }} transition={{ duration: .3, ease: "easeOut" }} />}</AnimatePresence>
       {screen === "game" && thinking && <div className="thinking-chip"><span className="thinking-dot"/> Stockfish думает</div>}
     </div>
     );
@@ -313,8 +324,8 @@ export default function App() {
             <button onClick={() => setScreen("history")}><List/><span>История</span></button>
             <button onClick={() => setScreen("settings")}><SlidersHorizontal/><span>Настройки</span></button>
           </div>
-          {finished && <section className="result-card"><span className="eyebrow">КОНЕЦ ПАРТИИ</span><h2>{game.isCheckmate() ? (game.turn()===humanColor?"Мат":"Победа") : "Ничья"}</h2><p>{status}</p><div><button className="outline-button" onClick={() => setScreen("home")}>В меню</button><button className="gold-button" onClick={restart}>Реванш</button></div></section>}
-          {promotion && <div className="promotion-panel"><h2>ВО ЧТО ПРЕВРАТИТЬ ПЕШКУ</h2><div>{PIECES.map(([piece,symbol,label])=><button key={piece} onClick={()=>playMove(promotion.from,promotion.to,piece)}><span>{symbol}</span>{label}</button>)}</div></div>}
+          {finished && <MotionDiv className="result-card" initial={motionEnabled ? { opacity: 0, y: 18 } : false} animate={{ opacity: 1, y: 0 }} transition={{ duration: motionEnabled ? .2 : 0, ease: "easeOut" }}><span className="eyebrow">КОНЕЦ ПАРТИИ</span><h2>{game.isCheckmate() ? (game.turn()===humanColor?"Мат":"Победа") : "Ничья"}</h2><p>{status}</p><div><button className="outline-button" onClick={() => setScreen("home")}>В меню</button><button className="gold-button" onClick={restart}>Реванш</button></div></MotionDiv>}
+          <AnimatePresence>{promotion && <MotionDiv className="promotion-panel" initial={motionEnabled ? { opacity: 0, y: -12 } : false} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: motionEnabled ? .18 : 0, ease: "easeOut" }}><h2>ВО ЧТО ПРЕВРАТИТЬ ПЕШКУ</h2><div>{PIECES.map(([piece,symbol,label])=><button key={piece} onClick={()=>playMove(promotion.from,promotion.to,piece)}><span>{symbol}</span>{label}</button>)}</div></MotionDiv>}</AnimatePresence>
         </MotionDiv>}
 
         {screen === "history" && <MotionDiv className="screen sub-screen" key="history" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
