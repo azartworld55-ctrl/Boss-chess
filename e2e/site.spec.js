@@ -40,6 +40,29 @@ test("mobile layout has no horizontal overflow", async ({ page }) => {
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
 });
 
+test("home board preview is a prominent focal element across screen sizes", async ({ page }) => {
+  for (const viewport of [
+    { width: 1440, height: 900, minBoardWidth: 620 },
+    { width: 390, height: 844, minBoardWidth: 290 },
+    { width: 360, height: 740, minBoardWidth: 270 },
+  ]) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto("/");
+    const board = page.locator(".home-board");
+    await expect(board).toBeVisible();
+    const layout = await page.evaluate(() => {
+      const boardRect = document.querySelector(".home-board").getBoundingClientRect();
+      return {
+        boardWidth: boardRect.width,
+        viewportHeight: document.documentElement.clientHeight,
+        pageHeight: document.documentElement.scrollHeight,
+      };
+    });
+    expect(layout.boardWidth).toBeGreaterThanOrEqual(viewport.minBoardWidth);
+    expect(layout.pageHeight).toBeLessThanOrEqual(layout.viewportHeight);
+  }
+});
+
 test("two-tap moves work and legal-move hints remain visible when enabled", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
