@@ -98,7 +98,7 @@ test("settings return to the screen they were opened from", async ({ page }) => 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await openNewGame(page);
-  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page.locator(".game-controls").getByRole("button", { name: "Настройки" }).click();
   await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
   await page.getByRole("button", { name: "Назад" }).click();
   await expect(page.locator(".game-screen .board-frame")).toBeVisible();
