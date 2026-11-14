@@ -173,6 +173,6 @@ test("captures visual review screenshots for key screens", async ({ page }, test
   await capture("settings-mobile");
 
   await page.getByRole("button", { name: "Назад" }).click();
-  const board = await openNewGame(page);
+  await openNewGame(page);
   await capture("game-mobile");
 });
