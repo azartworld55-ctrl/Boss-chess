@@ -325,7 +325,19 @@ html,body,#root,.app-shell{overflow:hidden!important}
   .home-heading p{font-size:11px;line-height:1.3}
   .home-highlights{gap:5px;margin:0 auto}
   .home-highlights span{min-height:24px;padding:0 7px;font-size:8px}
-  .home-board{display:none!important}
+  .home-board{
+    display:block!important;
+    width:min(56vw,250px,31dvh);
+    max-width:100%;
+    max-height:31dvh;
+    margin:0 auto;
+    flex:0 1 auto;
+    min-height:0;
+  }
+  .home-board .board-frame{width:100%;max-height:100%}
+  .home-actions{width:100%;gap:7px;margin-top:auto;flex:0 0 auto}
+  .home-screen{align-items:center}
+  .home-heading,.home-highlights,.home-actions{width:100%}
   .home-actions{width:100%;gap:8px;margin-top:auto}
   .continue-card,.new-game-button,.campaign-home-button{
     min-height:54px;height:54px;padding:8px 12px;border-radius:13px;gap:9px;font-size:14px;
