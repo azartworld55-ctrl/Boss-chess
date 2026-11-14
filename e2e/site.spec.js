@@ -109,7 +109,9 @@ test("mobile home menu keeps the board preview and all actions visible without s
   for (const viewport of [{ width: 390, height: 844 }, { width: 360, height: 740 }]) {
     await page.setViewportSize(viewport);
     await page.goto("/");
-    await openNewGame(page);
+    const board = await openNewGame(page);
+    await clickSquare(board, "e2");
+    await clickSquare(board, "e4");
     await page.getByRole("button", { name: "В меню" }).click();
 
     await expect(page.locator(".home-board .board-frame")).toBeVisible();
@@ -145,4 +147,32 @@ test("mobile settings fit in the viewport without a scroll area", async ({ page 
     content: node.closest(".sub-screen").scrollHeight,
   }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+});
+
+test("captures visual review screenshots for key screens", async ({ page }, testInfo) => {
+  const capture = async (name) => {
+    await page.screenshot({
+      path: testInfo.outputPath(`${name}.png`),
+      fullPage: true,
+      animations: "disabled",
+    });
+  };
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
+  await capture("home-desktop");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
+  await capture("home-mobile");
+
+  await page.getByRole("button", { name: "Настройки" }).click();
+  await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
+  await capture("settings-mobile");
+
+  await page.getByRole("button", { name: "Назад" }).click();
+  const board = await openNewGame(page);
+  await capture("game-mobile");
 });
