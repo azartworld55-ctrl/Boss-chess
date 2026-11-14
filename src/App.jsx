@@ -46,6 +46,7 @@ export default function App() {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [screen, setScreen] = useState("home");
   const [settingsReturn, setSettingsReturn] = useState("home");
+  const settingsReturnRef = useRef("home");
   const [humanColor, setHumanColor] = useState("w");
   const [chosenSide, setChosenSide] = useState("w");
   const [reviewPly, setReviewPly] = useState(null);
@@ -222,7 +223,8 @@ export default function App() {
   };
   const changeElo = (value) => setElo(value);
   const openReview = (ply) => { setReviewPly(ply); setScreen("review"); };
-  const openSettings = () => { setSettingsReturn(screen); setScreen("settings"); };
+  const openSettings = () => { settingsReturnRef.current = screen; setSettingsReturn(screen); setScreen("settings"); };
+  const closeSettings = () => setScreen(settingsReturnRef.current || "home");
   const boardPosition = screen === "review" ? displayedGame || fen : fen;
   const playerLabel = humanColor === "w" ? "Белые" : "Чёрные";
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
@@ -352,7 +354,7 @@ export default function App() {
 
         {screen === "history" && <MotionDiv className="screen sub-screen" key="history" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
           <ScreenTitle title="История ходов" onBack={() => setScreen("game")}/>
-          {moves.length ? <div className="history-list">{moves.map((m,i)=><button key={m.number} className={(reviewPly===i*2+2?"current":"")} onClick={() => openReview(i*2+2)}><span>{m.number}</span><b>{m.white}</b><b>{m.black}</b></button>)}</div> : <p className="empty-state">Здесь появятся ходы вашей партии.</p>}
+          {moves.length ? <div className="history-list">{moves.slice(-8).map((m,i)=><button key={m.number} className={(reviewPly===i*2+2?"current":"")} onClick={() => openReview(i*2+2)}><span>{m.number}</span><b>{m.white}</b><b>{m.black}</b></button>)}</div> : <p className="empty-state">Здесь появятся ходы вашей партии.</p>}
           <p className="helper-text">Выберите ход, чтобы посмотреть позицию. Продолжить игру можно только из текущей позиции.</p>
           <div className="bottom-actions"><button className="gold-button" onClick={() => setScreen("game")}>К партии</button></div>
         </MotionDiv>}
@@ -367,7 +369,7 @@ export default function App() {
         </MotionDiv>}
 
         {screen === "settings" && <MotionDiv className="screen sub-screen" key="settings" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
-          <ScreenTitle title="Настройки" onBack={() => setScreen(settingsReturn)}/>
+          <ScreenTitle title="Настройки" onBack={closeSettings}/>
           <DifficultyControl elo={elo} onChange={changeElo} helperText={settingsReturn === "game" ? "Новое значение начнёт действовать со следующего хода Stockfish. Уже начатый расчёт не изменится." : "Уровень силы для следующей партии."}/>
           <div className="settings-layout">
             <section className="settings-group"><div className="settings-group-heading"><h2>ПОДСКАЗКИ НА ДОСКЕ</h2><p>Что показывать во время игры</p></div><div className="settings-options"><SettingToggle label="Возможные ходы" checked={hintsEnabled} onChange={setHintsEnabled}/><SettingToggle label="Последний ход" checked={lastMoveEnabled} onChange={setLastMoveEnabled}/><SettingToggle label="Координаты клеток" checked={coordinatesEnabled} onChange={setCoordinatesEnabled}/></div></section>

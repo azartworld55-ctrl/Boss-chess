@@ -93,3 +93,86 @@ test("basic accessibility scan", async ({ page }) => {
   const results = await new AxeBuilder({ page }).exclude(".board-frame").analyze();
   expect(results.violations).toEqual([]);
 });
+
+test("settings return to the screen they were opened from", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await openNewGame(page);
+  await page.locator(".game-controls").getByRole("button", { name: "Настройки" }).click();
+  await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
+  await page.getByRole("button", { name: "Назад" }).click();
+  await expect(page.locator(".game-screen .board-frame")).toBeVisible();
+  await expect(page.locator(".game-controls")).toBeVisible();
+});
+
+test("mobile home menu keeps the board preview and all actions visible without scrolling", async ({ page }) => {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 360, height: 740 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const board = await openNewGame(page);
+    await clickSquare(board, "e2");
+    await clickSquare(board, "e4");
+    await page.getByRole("button", { name: "В меню" }).click();
+
+    await expect(page.locator(".home-board .board-frame")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Продолжить партию" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Кампания" })).toBeVisible();
+
+    const layout = await page.evaluate(() => {
+      const selectors = [".home-board", ".home-actions", ".home-actions button"];
+      const rects = selectors.flatMap((selector) =>
+        [...document.querySelectorAll(selector)].map((node) => {
+          const rect = node.getBoundingClientRect();
+          return { top: rect.top, bottom: rect.bottom, height: rect.height };
+        }),
+      );
+      return {
+        viewportHeight: document.documentElement.clientHeight,
+        pageHeight: document.documentElement.scrollHeight,
+        rects,
+      };
+    });
+    expect(layout.pageHeight).toBeLessThanOrEqual(layout.viewportHeight);
+    expect(layout.rects.every((rect) => rect.top >= 0 && rect.bottom <= layout.viewportHeight)).toBeTruthy();
+  }
+});
+
+test("mobile settings fit in the viewport without a scroll area", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Настройки" }).click();
+  const dimensions = await page.locator(".settings-layout").evaluate((node) => ({
+    viewport: node.closest(".sub-screen").clientHeight,
+    content: node.closest(".sub-screen").scrollHeight,
+  }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+});
+
+test("captures visual review screenshots for key screens", async ({ page }, testInfo) => {
+  const capture = async (name) => {
+    await page.screenshot({
+      path: testInfo.outputPath(`${name}.png`),
+      fullPage: true,
+      animations: "disabled",
+    });
+  };
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
+  await capture("home-desktop");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
+  await capture("home-mobile");
+
+  await page.getByRole("button", { name: "Настройки" }).click();
+  await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
+  await capture("settings-mobile");
+
+  await page.getByRole("button", { name: "Назад" }).click();
+  await openNewGame(page);
+  await capture("game-mobile");
+});

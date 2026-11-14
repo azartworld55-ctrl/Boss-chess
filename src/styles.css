@@ -263,3 +263,131 @@ body{overscroll-behavior:none}
   .campaign-opponent{min-height:54px}
   .campaign-opponent img,.campaign-unknown{width:46px;height:46px;min-width:46px;min-height:46px;flex-basis:46px}
 }
+
+
+/* Compact, fixed-viewport navigation: no page-level scrolling. */
+html,body,#root,.app-shell{overflow:hidden!important}
+.app-shell{min-height:0;height:100dvh;max-height:100dvh}
+.screen,.sub-screen,.home-screen,.campaign-screen{min-height:0;overflow:hidden!important;overscroll-behavior:none}
+.sub-screen{height:calc(100% - 58px);padding:clamp(8px,1.5vh,16px) 0;gap:clamp(6px,1vh,10px)}
+.screen-title{flex:0 0 auto;margin-bottom:clamp(5px,1vh,12px)}
+.screen-title .round-icon{position:relative;z-index:5;flex:0 0 44px;pointer-events:auto;touch-action:manipulation}
+.settings-layout{flex:0 0 auto;gap:8px}
+.settings-group{min-width:0}
+.settings-footnote{flex:0 0 auto;margin:4px 2px 0}
+.difficulty-section{flex:0 0 auto;margin-bottom:8px}
+.difficulty-section h2{margin-bottom:6px}
+.difficulty-panel{padding:12px}
+.difficulty-context{margin:4px 0;font-size:10px}
+.difficulty-panel input[type="range"]{margin:5px 0}
+.range-labels{font-size:9px}
+.elo-number{margin-top:7px}
+.difficulty-presets{gap:4px;margin-top:7px}
+.difficulty-presets button{min-height:30px;font-size:10px}
+.form-section,.difficulty-section,.settings-group{margin-bottom:8px}
+.screen-title h1{font-size:22px}
+.history-list{overflow:hidden!important;max-height:none}
+.campaign-screen{
+  height:calc(100% - 58px);
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr) auto auto auto;
+  align-content:stretch;
+  gap:clamp(5px,1vh,9px);
+  padding:clamp(6px,1vh,10px) 0;
+}
+.campaign-screen>.game-topline,.campaign-opponent,.campaign-status,.campaign-rules,.campaign-footnote{min-height:0;margin:0}
+.campaign-opponent{padding:6px 9px}
+.campaign-opponent img,.campaign-unknown{width:44px;height:44px;min-width:44px;min-height:44px;flex-basis:44px}
+.campaign-opponent strong{font-size:14px}
+.campaign-opponent small{font-size:9px}
+.campaign-board{
+  width:min(100%,calc(100dvh - 290px));
+  max-width:100%;
+  max-height:100%;
+  min-height:0;
+  aspect-ratio:1;
+  align-self:center;
+  justify-self:center;
+}
+.campaign-status{padding:7px 10px;font-size:11px}
+.campaign-rules{padding:0}
+.campaign-rules summary{min-height:34px;font-size:11px}
+.campaign-rules>span{padding:0 10px 5px;font-size:10px}
+.campaign-footnote{font-size:9px;line-height:1.2}
+@media(max-width:600px){
+  .app-shell{width:calc(100% - 20px)}
+  .home-screen{
+    justify-content:flex-start;
+    gap:clamp(8px,1.5vh,13px);
+    padding:clamp(10px,2vh,18px) 0 max(8px,env(safe-area-inset-bottom,0px));
+  }
+  .home-heading h1{font-size:clamp(27px,7vw,34px);margin:3px 0}
+  .home-heading p{font-size:11px;line-height:1.3}
+  .home-highlights{gap:5px;margin:0 auto}
+  .home-highlights span{min-height:24px;padding:0 7px;font-size:8px}
+  .home-board{
+    display:block!important;
+    width:min(56vw,250px,31dvh);
+    max-width:100%;
+    max-height:31dvh;
+    margin:0 auto;
+    flex:0 1 auto;
+    min-height:0;
+  }
+  .home-board .board-frame{width:100%;max-height:100%}
+  .home-actions{width:100%;gap:7px;margin-top:auto;flex:0 0 auto}
+  .home-screen{align-items:center}
+  .home-heading,.home-highlights,.home-actions{width:100%}
+  .home-actions{width:100%;gap:8px;margin-top:auto}
+  .continue-card,.new-game-button,.campaign-home-button{
+    min-height:54px;height:54px;padding:8px 12px;border-radius:13px;gap:9px;font-size:14px;
+  }
+  .continue-card strong{font-size:13px}
+  .continue-card small{margin-top:2px;font-size:9px}
+  .continue-icon{width:32px;height:32px}
+  .campaign-home-button span{font-size:9px}
+  .home-screen .campaign-home-button svg,.home-screen .new-game-button svg{width:16px}
+  .sub-screen{padding-top:8px;padding-bottom:8px;gap:5px}
+  .screen-title{margin-bottom:4px;gap:8px}
+  .screen-title .round-icon{width:38px;height:38px;flex-basis:38px}
+  .screen-title h1{font-size:20px}
+  .difficulty-panel{padding:9px}
+  .difficulty-value strong{font-size:24px}
+  .difficulty-value small{font-size:9px}
+  .range-labels{font-size:8px}
+  .elo-number{font-size:10px}
+  .elo-number input{width:84px;min-height:32px}
+  .difficulty-presets button{min-height:27px;font-size:9px}
+  .settings-layout{grid-template-columns:1fr 1fr;gap:7px}
+  .settings-layout .settings-group:last-child{grid-column:1/-1}
+  .settings-group{padding:9px;border-radius:12px}
+  .settings-group-heading{margin-bottom:6px}
+  .settings-group-heading h2{font-size:8px;letter-spacing:1px}
+  .settings-group-heading p{font-size:9px;line-height:1.2}
+  .settings-options{gap:4px}
+  .settings-options .setting-toggle{min-height:35px;padding:0 7px;font-size:10px}
+  .settings-options .setting-toggle i{width:34px;height:20px}
+  .settings-options .setting-toggle i:after{width:14px;height:14px}
+  .settings-options .setting-toggle input:checked+i:after{transform:translateX(14px)}
+  .board-themes{gap:5px}
+  .theme-swatch{height:44px;padding-bottom:4px}
+  .theme-swatch span{font-size:8px;padding:3px 4px}
+  .settings-footnote{font-size:9px}
+  .side-option{min-height:66px}
+  .side-option>span{font-size:23px}
+  .side-option b{font-size:10px}
+  .form-section h2,.difficulty-section h2{font-size:9px;margin-bottom:6px}
+  .section-hint{font-size:10px;margin-bottom:7px}
+  .bottom-actions{gap:6px}
+  .bottom-actions .gold-button{min-height:44px}
+  .campaign-board{width:min(100%,calc(100dvh - 280px))}
+}
+@media(max-height:720px){
+  .home-screen{gap:6px;padding-top:7px}
+  .home-actions{gap:6px}
+  .continue-card,.new-game-button,.campaign-home-button{height:48px;min-height:48px}
+  .campaign-screen{gap:4px;padding:4px 0}
+  .campaign-board{width:min(100%,calc(100dvh - 250px))}
+  .campaign-opponent{padding:4px 7px}
+  .campaign-opponent img,.campaign-unknown{width:38px;height:38px;min-width:38px;min-height:38px;flex-basis:38px}
+}
