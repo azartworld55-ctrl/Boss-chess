@@ -301,7 +301,7 @@ export default function App() {
     <main className="app-shell">
       <Toaster position="top-center" theme="dark" />
       <header className="topbar">
-        <button className="wordmark" onClick={() => setScreen("home")} aria-label="BOSS CHESS 2.2.0 — Главное меню">
+        <button className="wordmark" onClick={() => setScreen("home")}>
           <span className="brand-crown"><Crown size={19}/></span><span>BOSS <b>CHESS</b></span><small className="brand-version">2.2.0</small>
         </button>
         <button className="header-settings" onClick={openSettings} aria-label="Настройки"><SlidersHorizontal size={20}/></button>
