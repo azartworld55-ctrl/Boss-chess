@@ -192,3 +192,17 @@ test("campaign uses the illustrated Peshok reveal instead of the legacy portrait
   await expect(page.getByText("Личность скрыта")).toBeVisible();
   await expect(page.locator(".boss-portrait-shell img")).toHaveCount(0);
 });
+
+test("capturing the first enemy pawn reveals Peshok with an animated boss intro", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Кампания" }).click();
+  const board = page.locator(".campaign-board");
+  await clickSquare(board, "e2");
+  await clickSquare(board, "e4");
+  await expect(page.locator(".campaign-status")).toContainText("Твой ход", { timeout: 10000 });
+  await clickSquare(board, "e4");
+  await clickSquare(board, "f5");
+  await expect(page.getByRole("dialog", { name: "ПЕШОК" })).toBeVisible();
+  await expect(page.locator(".boss-reveal-art")).toHaveAttribute("src", /peshok\\.svg/);
+});
