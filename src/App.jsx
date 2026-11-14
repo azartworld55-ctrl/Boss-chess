@@ -228,7 +228,7 @@ export default function App() {
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
 
   const handleSquareClick = ({ square }) => {
-    if (screen !== "game" || !hintsEnabled || thinking || finished || game.turn() !== humanColor) return;
+    if (screen !== "game" || thinking || finished || game.turn() !== humanColor) return;
     if (selectedSquare) {
       const legal = game.moves({ square: selectedSquare, verbose: true });
       if (legal.some((move) => move.to === square)) {
@@ -299,7 +299,7 @@ export default function App() {
     <main className="app-shell">
       <Toaster position="top-center" theme="dark" />
       <header className="topbar">
-        <button className="wordmark" onClick={() => setScreen("home")} aria-label="Главное меню">
+        <button className="wordmark" onClick={() => setScreen("home")} aria-label="BOSS CHESS — Главное меню">
           <span className="brand-crown"><Crown size={19}/></span><span>BOSS <b>CHESS</b></span>
         </button>
         <button className="header-settings" onClick={openSettings} aria-label="Настройки"><SlidersHorizontal size={20}/></button>
