@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
 
 :root{
   font-family:"DM Sans",sans-serif;color:#f4f0e8;background:#090b10;font-synthesis:none;
@@ -325,3 +325,193 @@ button:disabled{opacity:.38;cursor:not-allowed}
 }
 .brand-version{margin-left:2px;padding:4px 6px;border:1px solid #9d7c494d;border-radius:6px;color:var(--gold-bright);font:700 8px "DM Sans",sans-serif;letter-spacing:1px}
 @media(max-width:759px){.brand-version{font-size:7px;padding:3px 5px}}
+
+
+/* BOSS CHESS 3.0 — original illustrated arena system */
+:root{
+  --bg:#080b10;--panel:#10161e;--panel-2:#18212b;--panel-3:#222d38;
+  --line:#3b4650;--line-soft:#29343d;--muted:#9ca5ae;--text:#f3ead8;
+  --gold:#d8a64f;--gold-bright:#f4d18a;--gold-dim:#8c6336;
+  --green:#73917e;--red:#e77e79;
+}
+body{background:#080b10 url("/images/backgrounds/arena.svg") center/cover fixed no-repeat}
+.app-shell:before{opacity:.12;background-image:linear-gradient(#d9bd820a 1px,transparent 1px),linear-gradient(90deg,#d9bd820a 1px,transparent 1px);background-size:64px 64px}
+.topbar{border-bottom:1px solid #d7b06a24}
+.brand-crown{border-radius:50%;background:radial-gradient(circle,#d7a64c28,#141b21 72%);border-color:#d7a64c77;box-shadow:0 0 26px #d7a64c1b,inset 0 0 12px #e8bd6c18}
+.wordmark{letter-spacing:3.2px}
+.brand-version{border-color:#d6ad6370;background:#d6ad6310}
+.home-screen{grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);grid-template-rows:auto auto minmax(0,1fr);column-gap:clamp(28px,4vw,68px);row-gap:13px;padding:clamp(18px,3vh,34px) 0 20px}
+.home-heading{grid-column:1;grid-row:1;align-self:end;align-items:center}
+.home-heading h1{font:800 clamp(48px,6vw,76px)/.94 "Cinzel",Georgia,serif;letter-spacing:-2.4px;text-shadow:0 8px 35px #0009}
+.home-heading h1 span{color:#f2ead8}
+.home-heading h1 b{color:#e2b35e;font-weight:800}
+.home-heading p{font-size:14px;color:#b3b8bb;letter-spacing:.15px}
+.home-heading .eyebrow{font-size:9px;letter-spacing:2.1px}
+.home-crest{position:relative;width:74px;height:74px;display:grid;place-items:center;border:1px solid #d8a64f66;border-radius:50%;color:#edc879;background:radial-gradient(circle,#d8a64f21,#0b1118 70%);box-shadow:0 0 38px #d8a64f1b,inset 0 0 20px #d8a64f18}
+.home-crest:before,.home-crest:after{content:"";position:absolute;inset:-7px;border:1px solid #d8a64f24;border-radius:50%}
+.home-crest:after{inset:7px;border-style:dashed;border-color:#d8a64f2c}
+.home-crest span{position:absolute;bottom:12px;font:700 8px "DM Sans",sans-serif;letter-spacing:2px}
+.home-highlights{grid-column:1;grid-row:2;gap:7px}
+.home-highlights span{min-height:29px;padding:0 10px;border-color:#d8a64f2c;background:#0c1219b8;color:#c5c2b9;font-size:9px;letter-spacing:1px}
+.home-board{grid-column:1;grid-row:3;width:min(100%,min(45vw,570px));padding:17px;border:1px solid #d8a64f70;border-radius:12px;background:linear-gradient(145deg,#222a31eF,#0c1219f2);box-shadow:0 28px 85px #000b,0 0 45px #d8a64f12,inset 0 1px #fff2;align-self:center}
+.home-board:before{inset:5px;border:1px solid #e9c47a44;border-radius:7px;padding:0;background:none;mask:none}
+.home-board:after{content:"";position:absolute;inset:-10px;border:1px solid #d8a64f1c;border-radius:17px;pointer-events:none}
+.board-frame-label,.board-frame-footer{display:flex;align-items:center;justify-content:space-between;padding:0 4px 10px;color:#d8b36f;font-size:8px;font-weight:800;letter-spacing:2px}
+.board-frame-footer{padding:10px 4px 0;color:#7f8b90;font-size:7px}
+.home-board .board-frame{padding:6px;border:1px solid #d7b06a66;border-radius:8px;background:#0a1016;box-shadow:0 12px 34px #0008}
+.home-board .board-frame>div{border-radius:5px;overflow:hidden}
+.home-actions{grid-column:2;grid-row:1/4;align-self:stretch;justify-content:center;max-width:520px;gap:14px;padding:clamp(16px,3vw,34px);border:1px solid #d8a64f35;border-radius:12px;background:linear-gradient(155deg,#18212adf,#0b1118f2 70%);box-shadow:0 24px 70px #0007,inset 0 1px #fff1;position:relative;overflow:hidden}
+.home-actions:before{content:"";position:absolute;inset:8px;border:1px solid #d8a64f1b;border-radius:7px;pointer-events:none}
+.home-actions-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;color:#8d989c;font-size:9px;letter-spacing:2px}
+.home-actions-heading .eyebrow{font-size:8px;letter-spacing:1.6px}
+.home-actions-heading .eyebrow:before{display:none}
+.campaign-home-button{min-height:126px;padding:10px 14px;border:1px solid #c3924b8c;border-radius:8px;background:#0d141c url("/images/ui/plaque-dark.svg") center/100% 100% no-repeat;box-shadow:0 14px 32px #0007,inset 0 1px #fff1;gap:13px}
+.campaign-home-button:hover{border-color:#f0ca7b;box-shadow:0 16px 36px #0009,0 0 24px #d8a64f22}
+.campaign-home-button .campaign-art{width:94px;height:104px;flex:0 0 94px;display:grid;place-items:center;overflow:hidden;border:1px solid #d8a64f6b;border-radius:7px;background:radial-gradient(circle,#d8a64f30,#0a1119 70%)}
+.campaign-home-button .campaign-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 7px 14px #0009);transition:transform .3s}
+.campaign-home-button:hover .campaign-art img{transform:scale(1.08) translateY(-2px)}
+.campaign-home-button .campaign-copy{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;margin:0}
+.campaign-home-button .campaign-copy small{color:#c6a66f;font-size:8px;letter-spacing:1.6px;font-weight:800}
+.campaign-home-button .campaign-copy strong{font:800 27px "Cinzel",Georgia,serif;color:#f3dfb5;line-height:1.05}
+.campaign-home-button .campaign-copy em{font-style:normal;color:#aab2b7;font-size:10px}
+.campaign-home-button .campaign-arrow{margin-left:auto;flex:0 0 auto;color:#e5b75f}
+.continue-card{min-height:72px;border-radius:8px;background:linear-gradient(120deg,#e7bd70,#b67b36);border-color:#f4d18a;box-shadow:0 12px 30px #0005,0 0 22px #d8a64f18}
+.new-game-button{min-height:72px;border:1px solid #e4bb6b;background:#0e151d url("/images/ui/plaque-gold.svg") center/100% 100% no-repeat;border-radius:8px;color:#f4dba9;font:700 15px "Cinzel",Georgia,serif;letter-spacing:1px;box-shadow:0 12px 30px #0007}
+.new-game-button:hover{border-color:#ffe2a1;box-shadow:0 14px 34px #0008,0 0 22px #d8a64f22}
+.new-game-button svg{color:#f1c875}
+.home-actions-note{display:flex;align-items:center;justify-content:center;gap:9px;padding-top:8px;border-top:1px solid #d8a64f24;color:#8d999d;font-size:9px;letter-spacing:.4px}
+.home-actions-note span{color:#d8a64f;font-size:18px}
+.board-frame{border-color:#c39a5b44;background:#0b1118;box-shadow:0 18px 50px #0009}
+.board-frame>div{border-radius:8px;overflow:hidden}
+.game-screen>.board-frame,.campaign-board{border:1px solid #d6ad6370;background:#0a1117;box-shadow:0 20px 50px #0009,0 0 25px #d8a64f10}
+.gold-button{background:#d7a64f url("/images/ui/plaque-gold.svg") center/100% 100% no-repeat;border:1px solid #f2d18c;border-radius:8px;color:#21170c;font-family:"Cinzel",Georgia,serif;letter-spacing:.8px;box-shadow:0 12px 28px #0006,0 0 20px #d8a64f1a}
+.gold-button:hover{filter:brightness(1.09);transform:translateY(-2px)}
+.round-icon,.header-settings{border-radius:8px;border-color:#b58b4c55;background:linear-gradient(145deg,#202a32,#0d141b);color:#e6c27d}
+.player-avatar{border-radius:8px;background:linear-gradient(145deg,#3d4449,#111821);border-color:#c79b55;color:#f0c879}
+.campaign-screen{width:100%;max-width:1120px;margin:0 auto;padding:clamp(8px,1.4vh,16px) 0;gap:clamp(7px,1vh,12px)}
+.campaign-chapter-mark{margin-left:auto;width:40px;height:40px;display:grid;place-items:center;border:1px solid #d7a64e66;border-radius:50%;color:#e8bf70;font:700 17px "Cinzel",Georgia,serif}
+.campaign-opponent{min-height:104px;padding:12px 18px;border:1px solid #d8a64f62;border-radius:9px;background:linear-gradient(110deg,#35251e,#151c23 72%);box-shadow:0 12px 36px #0006,inset 0 1px #fff1;gap:16px}
+.boss-portrait-shell{width:82px;height:82px;flex:0 0 82px;display:grid;place-items:center;overflow:hidden;border:1px solid #d8a64f88;border-radius:8px;background:radial-gradient(circle,#d8a64f35,#10151c 72%);box-shadow:0 0 24px #d8a64f1a}
+.boss-portrait-shell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 10px #0009)}
+.campaign-unknown{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:0;background:transparent;color:#d9ac5c}
+.campaign-unknown span{font:700 19px "Cinzel",serif}
+.campaign-opponent-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+.campaign-opponent-copy .eyebrow{font-size:8px;letter-spacing:1.7px}
+.campaign-opponent-copy strong{font:800 24px "Cinzel",Georgia,serif;color:#f2dfb9}
+.campaign-opponent-copy small{font-size:10px;color:#aeb6b6}
+.campaign-counter{margin-left:auto;text-align:right;white-space:nowrap}
+.campaign-counter b{font:800 25px "Cinzel",Georgia,serif;color:#eac16f}
+.campaign-counter b i{font-size:12px;color:#9b8c73;font-style:normal}
+.campaign-counter small{font-size:8px;letter-spacing:1px;text-transform:uppercase}
+.campaign-board-shell{width:min(100%,620px);align-self:center;padding:12px;border:1px solid #d8a64f4a;border-radius:10px;background:linear-gradient(145deg,#202b32,#0b1118);box-shadow:0 20px 55px #0008}
+.campaign-board-ornament{display:flex;justify-content:space-between;padding:0 4px 9px;color:#d4ad69;font-size:8px;font-weight:800;letter-spacing:2px}
+.campaign-board{width:100%;max-height:none;padding:5px}
+.campaign-status{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 15px;border:1px solid #b58b4c66;border-radius:8px;background:linear-gradient(110deg,#2a2419,#171d22);color:#f0cf8e;letter-spacing:.4px}
+.campaign-status-orb{width:7px;height:7px;border-radius:50%;background:#d6a64f;box-shadow:0 0 12px #d6a64f88}
+.campaign-status-orb.is-thinking{animation:pulse-glow 1s infinite alternate}
+@keyframes pulse-glow{to{opacity:.35;transform:scale(.7)}}
+.campaign-rules{border-color:#d7a64f36;background:#111920}
+.campaign-rules summary{color:#e7bf75}
+.campaign-footnote{font-size:9px}
+.campaign-intro{z-index:80;inset:0;display:grid;grid-template-columns:minmax(220px,.95fr) minmax(260px,1.05fr);align-items:center;justify-content:center;gap:clamp(16px,5vw,58px);padding:clamp(22px,6vw,72px);background:radial-gradient(ellipse at 27% 46%,#76502b55,transparent 40%),radial-gradient(ellipse at 80% 55%,#263640aa,transparent 48%),#070a10f5;backdrop-filter:blur(18px);overflow:hidden}
+.boss-reveal-stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.boss-reveal-stars i{position:absolute;width:5px;height:5px;border-radius:50%;background:#f2cd82;box-shadow:0 0 22px 5px #d7a64f55;animation:reveal-twinkle 2.4s ease-in-out infinite alternate}
+.boss-reveal-stars i:nth-child(1){left:12%;top:20%}.boss-reveal-stars i:nth-child(2){left:31%;top:77%;animation-delay:.4s}.boss-reveal-stars i:nth-child(3){left:54%;top:14%;animation-delay:.8s}.boss-reveal-stars i:nth-child(4){left:78%;top:27%;animation-delay:1.2s}.boss-reveal-stars i:nth-child(5){left:87%;top:78%;animation-delay:.6s}.boss-reveal-stars i:nth-child(6){left:46%;top:88%;animation-delay:1.5s}
+@keyframes reveal-twinkle{from{opacity:.2;transform:scale(.65)}to{opacity:1;transform:scale(1.2)}}
+.boss-reveal-stage{position:relative;z-index:1;width:min(100%,420px);aspect-ratio:1;display:grid;place-items:center;justify-self:end}
+.boss-reveal-ring{position:absolute;inset:7%;border:1px solid #e1b76555;border-radius:50%;box-shadow:0 0 50px #d8a64f22,inset 0 0 50px #d8a64f0c}
+.boss-reveal-ring:before,.boss-reveal-ring:after{content:"";position:absolute;inset:-9%;border:1px dashed #d8a64f35;border-radius:50%;animation:slow-turn 28s linear infinite}
+.boss-reveal-ring:after{inset:16%;border-style:solid;opacity:.55;animation-direction:reverse}
+@keyframes slow-turn{to{transform:rotate(360deg)}}
+.boss-reveal-art{position:relative;z-index:2;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 24px 44px #000b) drop-shadow(0 0 24px #d8a64f2b)}
+.boss-reveal-copy{position:relative;z-index:1;max-width:480px}
+.boss-reveal-kicker{display:inline-flex;align-items:center;gap:8px;color:#e6bc70;font-size:10px;font-weight:800;letter-spacing:2px}
+.boss-reveal-copy h2{margin:12px 0 4px;color:#f2d9a5;font:800 clamp(42px,7vw,76px)/1 "Cinzel",Georgia,serif;letter-spacing:2px;text-shadow:0 6px 30px #d8a64f28}
+.boss-reveal-copy>strong{color:#a88a5c;font-size:9px;letter-spacing:2.4px}
+.boss-reveal-copy p{max-width:390px;margin:22px 0 28px;color:#c7c3b8;font-size:16px;line-height:1.75}
+.boss-reveal-copy .gold-button{max-width:330px;min-height:60px;display:flex;align-items:center;justify-content:center;gap:10px}
+.boss-reveal-copy .gold-button svg{transform:rotate(180deg)}
+@media(max-width:900px){
+ .home-screen{grid-template-columns:minmax(0,1fr) minmax(290px,.92fr);column-gap:18px;padding-top:16px}
+ .home-heading h1{font-size:clamp(38px,5vw,58px)}
+ .home-crest{width:58px;height:58px}
+ .home-board{width:min(100%,min(44vw,460px));padding:12px}
+ .home-actions{padding:18px;gap:10px}
+ .campaign-home-button{min-height:104px}
+ .campaign-home-button .campaign-art{width:76px;height:84px;flex-basis:76px}
+}
+@media(max-width:700px){
+ .app-shell{width:calc(100% - 24px)}
+ .home-screen{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;row-gap:8px;padding:10px 0 12px}
+ .home-heading{grid-column:1;grid-row:1}
+ .home-heading h1{margin:5px 0 3px;font-size:clamp(35px,9vw,48px);letter-spacing:-1.7px}
+ .home-heading p{font-size:11px}
+ .home-heading .eyebrow{font-size:7px;letter-spacing:1.3px}
+ .home-crest{width:43px;height:43px;flex:0 0 43px}
+ .home-crest svg{width:20px}
+ .home-crest span{font-size:6px;bottom:7px}
+ .home-highlights{grid-column:1;grid-row:2;gap:5px}
+ .home-highlights span{min-height:22px;padding:0 7px;font-size:7px;letter-spacing:.5px}
+ .home-board{grid-column:1;grid-row:3;width:min(72vw,37dvh,292px);max-width:100%;padding:9px;border-radius:9px;align-self:center}
+ .board-frame-label{font-size:6px;padding-bottom:6px}
+ .board-frame-footer{font-size:6px;padding-top:6px}
+ .home-actions{grid-column:1;grid-row:4;max-width:none;padding:9px 10px;gap:7px;border-radius:9px}
+ .home-actions:before{inset:4px}
+ .home-actions-heading{font-size:7px}
+ .campaign-home-button{min-height:66px;padding:5px 8px;gap:8px}
+ .campaign-home-button .campaign-art{width:52px;height:56px;flex-basis:52px}
+ .campaign-home-button .campaign-copy{gap:2px}
+ .campaign-home-button .campaign-copy small{font-size:6px;letter-spacing:.8px}
+ .campaign-home-button .campaign-copy strong{font-size:18px}
+ .campaign-home-button .campaign-copy em{font-size:8px}
+ .continue-card,.new-game-button{min-height:48px;height:48px;padding:8px 12px;border-radius:7px}
+ .continue-card strong{font-size:12px}
+ .continue-card small{font-size:8px;margin-top:2px}
+ .continue-icon{width:30px;height:30px}
+ .new-game-button{font-size:12px}
+ .home-actions-note{font-size:7px;padding-top:4px}
+ .campaign-screen{padding:6px 0;gap:6px}
+ .campaign-opponent{min-height:66px;padding:6px 9px;gap:9px}
+ .boss-portrait-shell{width:54px;height:54px;flex-basis:54px}
+ .campaign-opponent-copy .eyebrow{font-size:6px}
+ .campaign-opponent-copy strong{font-size:16px}
+ .campaign-opponent-copy small{font-size:8px}
+ .campaign-counter b{font-size:17px}
+ .campaign-counter small{font-size:6px;letter-spacing:.4px}
+ .campaign-board-shell{width:min(100%,calc(100dvh - 250px));padding:7px}
+ .campaign-board-ornament{font-size:6px;padding-bottom:5px}
+ .campaign-status{padding:8px 10px;font-size:9px}
+ .campaign-footnote{font-size:7px}
+ .campaign-intro{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:0;padding:20px 24px max(24px,env(safe-area-inset-bottom))}
+ .boss-reveal-stage{width:min(68vw,34dvh,280px);justify-self:center;align-self:end}
+ .boss-reveal-copy{text-align:center;justify-self:center;width:100%}
+ .boss-reveal-kicker{font-size:8px;justify-content:center}
+ .boss-reveal-copy h2{font-size:clamp(36px,10vw,54px);margin:8px 0 3px}
+ .boss-reveal-copy>strong{font-size:7px;letter-spacing:1.5px}
+ .boss-reveal-copy p{font-size:12px;line-height:1.55;margin:12px auto 16px;max-width:320px}
+ .boss-reveal-copy .gold-button{max-width:none;min-height:50px}
+}
+@media(max-width:380px){
+ .home-heading .eyebrow{font-size:6px}
+ .home-highlights span{font-size:6px;padding:0 5px}
+ .home-board{width:min(74vw,36dvh,270px);padding:7px}
+ .home-actions{padding:7px;gap:5px}
+ .campaign-home-button{min-height:60px}
+ .campaign-home-button .campaign-art{width:46px;height:50px;flex-basis:46px}
+ .home-actions-note{display:none}
+ .campaign-intro{padding:12px 18px max(18px,env(safe-area-inset-bottom))}
+ .boss-reveal-stage{width:min(62vw,30dvh,230px)}
+}
+@media(max-height:720px) and (max-width:700px){
+ .home-screen{padding-top:5px;padding-bottom:6px;row-gap:5px}
+ .home-heading h1{font-size:34px}
+ .home-crest{width:36px;height:36px;flex-basis:36px}
+ .home-board{width:min(65vw,31dvh,240px);padding:6px}
+ .home-actions{gap:4px;padding:6px}
+ .campaign-home-button{min-height:54px}
+ .campaign-home-button .campaign-art{width:42px;height:46px;flex-basis:42px}
+ .home-actions-note{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .boss-reveal-stars i,.boss-reveal-ring:before,.boss-reveal-ring:after,.campaign-status-orb.is-thinking{animation:none}
+}
