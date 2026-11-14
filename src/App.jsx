@@ -331,9 +331,9 @@ export default function App() {
           </div>
           <div className="home-actions">
             <div className="home-actions-heading"><span className="eyebrow">ВЫБЕРИ СВОЙ ПУТЬ</span><span>01 / 02</span></div>
-            <button className="campaign-home-button" aria-label="Кампания" onClick={() => setScreen("campaign")}>
+            <button className="campaign-home-button" onClick={() => setScreen("campaign")}>
               <span className="campaign-art"><img src={import.meta.env.BASE_URL + "images/bosses/peshok.svg"} alt="" /></span>
-              <span className="campaign-copy"><small>ГЛАВА 01 · ПЕРВЫЙ СОПЕРНИК</small><strong>Пешок</strong><em>Открыть кампанию</em></span>
+              <span className="campaign-copy"><small>КАМПАНИЯ · ГЛАВА 01 · ПЕРВЫЙ СОПЕРНИК</small><strong>Пешок</strong><em>Открыть кампанию</em></span>
               <ChevronRight className="campaign-arrow" size={22}/>
             </button>
             {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {elo} Elo</small></span><ChevronRight className="continue-arrow"/></button>}
