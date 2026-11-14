@@ -17,6 +17,7 @@ test("opens the current Russian chess interface", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/Boss Chess 2\.0/);
   await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /BOSS CHESS/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Кампания" })).toBeVisible();
 });
@@ -88,7 +89,7 @@ test("illegal and opponent-piece taps do not make a move", async ({ page }) => {
 test("basic accessibility scan", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  // Keep this scan focused on the interface; the wordmark has a pre-existing label/name mismatch.
-  const results = await new AxeBuilder({ page }).exclude(".board-frame, .wordmark").analyze();
+  // react-chessboard currently renders unnamed draggable square controls; scan the surrounding UI.
+  const results = await new AxeBuilder({ page }).exclude(".board-frame").analyze();
   expect(results.violations).toEqual([]);
 });
