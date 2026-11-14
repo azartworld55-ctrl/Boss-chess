@@ -18,8 +18,31 @@ describe("Chapter 1: Pawn campaign rules", () => {
     expect(game.bossPawnsLeft).toBe(7);
   });
 
+  it("keeps boss abilities dormant before the first pawn is captured", () => {
+    const game = createPawnCampaign();
+    game.board = Array.from({length:8},()=>Array(8).fill(null));
+    game.board[3][3] = "p";
+    game.board[4][4] = "R";
+    game.turn = "b";
+    const result = applyCampaignMove(game, "d5", "e4");
+    expect(result.state.board[4][4]).toBe("p");
+    expect(result.state.bossRevealed).toBe(false);
+  });
+
+  it("activates boss pawn and king abilities only after the reveal", () => {
+    const game = createPawnCampaign();
+    game.bossRevealed = true;
+    game.board = Array.from({length:8},()=>Array(8).fill(null));
+    game.board[3][3] = "p";
+    game.board[4][4] = "R";
+    game.turn = "b";
+    const result = applyCampaignMove(game, "d5", "e4");
+    expect(result.state.board[4][4]).toBe("q");
+  });
+
   it("promotes a boss pawn immediately after it captures a player piece", () => {
     const game = createPawnCampaign();
+    game.bossRevealed = true;
     game.board = Array.from({length:8},()=>Array(8).fill(null));
     game.board[3][3] = "p";
     game.board[4][4] = "R";
@@ -30,6 +53,7 @@ describe("Chapter 1: Pawn campaign rules", () => {
 
   it("promotes the boss king when it reaches the player's back rank", () => {
     const game = createPawnCampaign();
+    game.bossRevealed = true;
     game.board = Array.from({length:8},()=>Array(8).fill(null));
     game.board[6][0] = "k";
     game.turn = "b";

@@ -15,7 +15,7 @@ async function clickSquare(board, square) {
 
 test("opens the current Russian chess interface", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/Boss Chess 3\.0\.0/);
+  await expect(page).toHaveTitle(/Boss Chess 3\.0\.1/);
   await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
   await expect(page.getByRole("button", { name: /BOSS CHESS/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
@@ -203,6 +203,29 @@ test("capturing the first enemy pawn reveals Peshok with an animated boss intro"
   await expect(page.locator(".campaign-status")).toContainText("Твой ход", { timeout: 10000 });
   await clickSquare(board, "e4");
   await clickSquare(board, "f5");
-  await expect(page.getByRole("dialog", { name: "ПЕШОК" })).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "ПЕШОК" });
+  await expect(dialog).toBeVisible();
   await expect(page.locator(".boss-reveal-art")).toHaveAttribute("src", /peshok[.]svg$/);
+  const layout = await dialog.evaluate((node) => {
+    const rect = node.getBoundingClientRect();
+    const art = node.querySelector(".boss-reveal-art").getBoundingClientRect();
+    const copy = node.querySelector(".boss-reveal-copy");
+    const copyRect = copy.getBoundingClientRect();
+    return {
+      position: getComputedStyle(node).position,
+      width: rect.width,
+      height: rect.height,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      artVisible: art.width > 0 && art.height > 0,
+      copyVisible: copyRect.left >= 0 && copyRect.right <= window.innerWidth,
+      textColor: getComputedStyle(copy.querySelector("h2")).color,
+    };
+  });
+  expect(layout.position).toBe("fixed");
+  expect(layout.width).toBeGreaterThanOrEqual(layout.viewportWidth);
+  expect(layout.height).toBeGreaterThanOrEqual(layout.viewportHeight);
+  expect(layout.artVisible).toBeTruthy();
+  expect(layout.copyVisible).toBeTruthy();
+  expect(layout.textColor).not.toBe("rgb(0, 0, 0)");
 });
