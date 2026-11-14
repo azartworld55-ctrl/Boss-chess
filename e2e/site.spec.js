@@ -182,7 +182,7 @@ test("3.0.0 home menu loads original art and custom chess pieces", async ({ page
   await page.goto("/");
   await expect(page.locator(".home-board .board-frame")).toBeVisible();
   await expect(page.locator(".campaign-art img")).toHaveAttribute("src", /peshok\.svg/);
-  await expect(page.locator(".home-board svg")).toHaveCount(32);
+  await expect(page.locator(".home-board svg")).toHaveCount(33);
   await expect(page.locator(".home-actions")).toBeVisible();
 });
 
@@ -204,5 +204,5 @@ test("capturing the first enemy pawn reveals Peshok with an animated boss intro"
   await clickSquare(board, "e4");
   await clickSquare(board, "f5");
   await expect(page.getByRole("dialog", { name: "ПЕШОК" })).toBeVisible();
-  await expect(page.locator(".boss-reveal-art")).toHaveAttribute("src", /peshok\\.svg/);
+  await expect(page.locator(".boss-reveal-art")).toHaveAttribute("src", /peshok[.]svg$/);
 });
