@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion as Motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, Crown, Sparkles } from "lucide-react";
 import { Chessboard } from "react-chessboard";
@@ -88,7 +89,7 @@ export default function CampaignScreen({ onExit }) {
 
       <p className="campaign-footnote">В кампании нет шаха и мата. Короля можно взять; сражение продолжается, пока на доске остаются пешки босса.</p>
 
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {showIntro && <Motion.div className="campaign-intro" role="dialog" aria-modal="true" aria-labelledby="boss-reveal-title" initial={reduceMotion ? {opacity:1} : {opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:reduceMotion ? 0 : .32}}>
           <div className="boss-reveal-stars" aria-hidden="true"><i/><i/><i/><i/><i/><i/></div>
           <div className="boss-reveal-stage">
@@ -103,7 +104,7 @@ export default function CampaignScreen({ onExit }) {
             <button className="gold-button" onClick={()=>setShowIntro(false)}>ВСТУПИТЬ В БОЙ <ArrowLeft size={17}/></button>
           </div>
         </Motion.div>}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </Motion.div>
   );
 }
