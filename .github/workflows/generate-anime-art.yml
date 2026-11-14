@@ -2,9 +2,6 @@ name: Generate anime catgirl
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/generate-anime-art.yml"
 
 permissions:
   contents: write
