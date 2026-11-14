@@ -105,10 +105,10 @@ export function applyCampaignMove(state, from, to) {
   let piece = next.board[fr][fc];
   const captured = next.board[tr][tc];
   next.board[fr][fc] = null;
-  // The boss's pawn promotes immediately after capturing any player piece.
-  if (colorOf(piece) === "b" && piece === "p" && captured && colorOf(captured) === "w") piece = "q";
-  // The boss king becomes a queen on the player's back rank.
-  if (colorOf(piece) === "b" && piece === "k" && tr === 7) piece = "q";
+  // Boss abilities are dormant until the player captures the first black pawn.
+  // From the following boss turn onward, its pawn and king transformations activate.
+  if (state.bossRevealed && colorOf(piece) === "b" && piece === "p" && captured && colorOf(captured) === "w") piece = "q";
+  if (state.bossRevealed && colorOf(piece) === "b" && piece === "k" && tr === 7) piece = "q";
   // Ordinary pawn promotion is automatic to queen in this campaign.
   if (piece === "P" && tr === 0) piece = "Q";
   if (piece === "p" && tr === 7) piece = "q";
