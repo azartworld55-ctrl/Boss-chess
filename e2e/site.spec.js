@@ -15,7 +15,7 @@ async function clickSquare(board, square) {
 
 test("opens the current Russian chess interface", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/Boss Chess 2\.2\.0/);
+  await expect(page).toHaveTitle(/Boss Chess 3\.0\.0/);
   await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
   await expect(page.getByRole("button", { name: /BOSS CHESS/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
@@ -175,4 +175,34 @@ test("captures visual review screenshots for key screens", async ({ page }, test
   await page.getByRole("button", { name: "Назад" }).click();
   await openNewGame(page);
   await capture("game-mobile");
+});
+
+test("3.0.0 home menu loads original art and custom chess pieces", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page.locator(".home-board .board-frame")).toBeVisible();
+  await expect(page.locator(".campaign-art img")).toHaveAttribute("src", /peshok\.svg/);
+  await expect(page.locator(".home-board svg")).toHaveCount(33);
+  await expect(page.locator(".home-actions")).toBeVisible();
+});
+
+test("campaign uses the illustrated Peshok reveal instead of the legacy portrait", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Кампания" }).click();
+  await expect(page.getByText("Личность скрыта")).toBeVisible();
+  await expect(page.locator(".boss-portrait-shell img")).toHaveCount(0);
+});
+
+test("capturing the first enemy pawn reveals Peshok with an animated boss intro", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Кампания" }).click();
+  const board = page.locator(".campaign-board");
+  await clickSquare(board, "e2");
+  await clickSquare(board, "e4");
+  await expect(page.locator(".campaign-status")).toContainText("Твой ход", { timeout: 10000 });
+  await clickSquare(board, "e4");
+  await clickSquare(board, "f5");
+  await expect(page.getByRole("dialog", { name: "ПЕШОК" })).toBeVisible();
+  await expect(page.locator(".boss-reveal-art")).toHaveAttribute("src", /peshok[.]svg$/);
 });

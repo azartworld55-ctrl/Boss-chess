@@ -11,11 +11,12 @@ import { Chessboard } from "react-chessboard";
 import { Toaster } from "sonner";
 import { useGameSettings } from "./store/useGameSettings.js";
 import CampaignScreen from "./engine/CampaignScreen.jsx";
+import { BOSS_PIECES } from "./components/BossPieces.jsx";
 
 const BOARD_THEMES = {
-  classic: { light: "#e8deca", dark: "#698777" },
-  green: { light: "#edf0d2", dark: "#7b9b60" },
-  blue: { light: "#e2e6e8", dark: "#8fa4ad" },
+  classic: { light: "#ead9b7", dark: "#3e5954" },
+  green: { light: "#e9ebca", dark: "#6c8052" },
+  blue: { light: "#e1e5e8", dark: "#657f8c" },
 };
 
 const ENGINE_PATH = "stockfish/stockfish-19-lite-single.js";
@@ -271,6 +272,7 @@ export default function App() {
     <div className="board-frame">
       <Chessboard options={{
         id: compact ? "boss-chess-home" : "boss-chess-live",
+        pieces: BOSS_PIECES,
         position: compact ? new Chess().fen() : boardPosition,
         boardOrientation: humanColor === "w" ? "white" : "black",
         onPieceDrop: compact || screen !== "game" ? undefined : onPieceDrop,
@@ -302,24 +304,41 @@ export default function App() {
       <Toaster position="top-center" theme="dark" />
       <header className="topbar">
         <button className="wordmark" onClick={() => setScreen("home")}>
-          <span className="brand-crown"><Crown size={19}/></span><span>BOSS <b>CHESS</b></span><small className="brand-version">2.2.0</small>
+          <span className="brand-crown"><Crown size={19}/></span><span>BOSS <b>CHESS</b></span><small className="brand-version">3.0.0</small>
         </button>
         <button className="header-settings" onClick={openSettings} aria-label="Настройки"><SlidersHorizontal size={20}/></button>
       </header>
 
       <AnimatePresence mode="wait">
-        {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={motionEnabled ? {opacity:0,y:8} : false} animate={{opacity:1,y:0}} exit={motionEnabled ? {opacity:0,y:-6} : {opacity:0}} transition={{duration:motionEnabled ? 0.18 : 0}}>
-          <div className="home-heading"><div><span className="eyebrow">ШАХМАТЫ ПРОТИВ ИИ</span><h1>Boss Chess</h1><p>Классические шахматы. Один достойный соперник.</p></div></div>
-          <div className="home-highlights">
-            <span><i className="home-highlight-dot"/> Stockfish 19</span>
-            <span>Классические правила</span>
-            <span>Один на один</span>
+        {screen === "home" && <MotionDiv className="screen home-screen" key="home" initial={motionEnabled ? {opacity:0,y:16} : false} animate={{opacity:1,y:0}} exit={motionEnabled ? {opacity:0,y:-10} : {opacity:0}} transition={{duration:motionEnabled ? 0.34 : 0}}>
+          <div className="home-heading">
+            <div>
+              <span className="eyebrow">ТВОЯ ШАХМАТНАЯ ЛЕГЕНДА НАЧИНАЕТСЯ ЗДЕСЬ</span>
+              <h1><span>Boss</span> <b>Chess</b></h1>
+              <p>Не просто партия. Целая история соперников.</p>
+            </div>
+            <div className="home-crest" aria-hidden="true"><Crown size={30}/><span>03</span></div>
           </div>
-          <div className="home-board">{renderBoard(true)}</div>
+          <div className="home-highlights">
+            <span><i className="home-highlight-dot"/> STOCKFISH 19</span>
+            <span>КЛАССИЧЕСКИЕ ПРАВИЛА</span>
+            <span>КАМПАНИЯ БОССОВ</span>
+          </div>
+          <div className="home-board">
+            <div className="board-frame-label"><span>АРЕНА I</span><span>КЛАССИЧЕСКИЙ НАБОР</span></div>
+            {renderBoard(true)}
+            <div className="board-frame-footer"><span>64 КЛЕТКИ</span><span>ОДНА ЦЕЛЬ · ПОБЕДИТЬ</span></div>
+          </div>
           <div className="home-actions">
+            <div className="home-actions-heading"><span className="eyebrow">ВЫБЕРИ СВОЙ ПУТЬ</span><span>01 / 02</span></div>
+            <button className="campaign-home-button" onClick={() => setScreen("campaign")}>
+              <span className="campaign-art"><img src={import.meta.env.BASE_URL + "images/bosses/peshok.svg"} alt="" /></span>
+              <span className="campaign-copy"><small>КАМПАНИЯ · ГЛАВА 01 · ПЕРВЫЙ СОПЕРНИК</small><strong>Пешок</strong><em>Открыть кампанию</em></span>
+              <ChevronRight className="campaign-arrow" size={22}/>
+            </button>
             {history.length > 0 && <button className="continue-card" onClick={() => setScreen("game")}><span className="continue-icon"><Play size={21} fill="currentColor"/></span><span><strong>Продолжить партию</strong><small>Вы — {playerLabel.toLowerCase()} · ход {Math.floor(history.length / 2) + 1} · {elo} Elo</small></span><ChevronRight className="continue-arrow"/></button>}
-            <button className="new-game-button" onClick={() => { setChosenSide("w"); setScreen("new"); }}>Новая партия <ChevronRight size={19}/></button>
-            <button className="campaign-home-button" onClick={() => setScreen("campaign")}>Кампания <span>Глава 1 · Классика</span><ChevronRight size={19}/></button>
+            <button className="new-game-button" onClick={() => { setChosenSide("w"); setScreen("new"); }}><span>Новая партия</span><ChevronRight size={19}/></button>
+            <div className="home-actions-note"><span>♜</span> Тренируйся. Побеждай. Становись легендой.</div>
           </div>
         </MotionDiv>}
 
@@ -362,7 +381,7 @@ export default function App() {
         {screen === "review" && <MotionDiv className="screen game-screen" key="review" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
           <ScreenTitle title="Просмотр партии" onBack={() => setScreen("history")}/>
           <PlayerBar name="Stockfish" subtitle="Компьютер" avatar="SF"/>
-          <div className="board-frame"><Chessboard options={{id:"boss-chess-review",position:displayedGame||fen,boardOrientation:humanColor==="w"?"white":"black",allowDragging:false,animationDurationInMs:0,showNotation:coordinatesEnabled,darkSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).dark},lightSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).light},boardStyle:{borderRadius:"13px",overflow:"hidden"}}}/></div>
+          <div className="board-frame"><Chessboard options={{id:"boss-chess-review",pieces:BOSS_PIECES,position:displayedGame||fen,boardOrientation:humanColor==="w"?"white":"black",allowDragging:false,animationDurationInMs:0,showNotation:coordinatesEnabled,darkSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).dark},lightSquareStyle:{backgroundColor:(BOARD_THEMES[boardTheme]||BOARD_THEMES.classic).light},boardStyle:{borderRadius:"13px",overflow:"hidden"}}}/></div>
           <PlayerBar name="Вы" subtitle={sideLabel} avatar="ВЫ"/>
           <div className="review-controls"><button onClick={()=>setReviewPly(0)}><ChevronsLeft/></button><button onClick={()=>setReviewPly(Math.max(0,(reviewPly||0)-1))}><ArrowLeft/></button><button onClick={()=>setReviewPly(Math.min(history.length,(reviewPly||0)+1))}><ChevronRight/></button><button onClick={()=>setReviewPly(history.length)}><ChevronsRight/></button></div>
           <div className="bottom-actions"><button className="gold-button" onClick={()=>setScreen("game")}>Вернуться к партии</button></div>
