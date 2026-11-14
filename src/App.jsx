@@ -228,7 +228,7 @@ export default function App() {
   const sideLabel = humanColor === "w" ? "Белые" : "Чёрные";
 
   const handleSquareClick = ({ square }) => {
-    if (screen !== "game" || !hintsEnabled || thinking || finished || game.turn() !== humanColor) return;
+    if (screen !== "game" || thinking || finished || game.turn() !== humanColor) return;
     if (selectedSquare) {
       const legal = game.moves({ square: selectedSquare, verbose: true });
       if (legal.some((move) => move.to === square)) {
