@@ -515,3 +515,8 @@ body{background:#080b10 url("../images/backgrounds/arena.svg") center/cover fixe
 @media(prefers-reduced-motion:reduce){
  .boss-reveal-stars i,.boss-reveal-ring:before,.boss-reveal-ring:after,.campaign-status-orb.is-thinking{animation:none}
 }
+
+.campaign-home-button .campaign-art{margin-left:0;color:inherit;font-size:inherit;font-weight:inherit;white-space:normal}
+.theme-swatch{background:linear-gradient(130deg,#ead9b7 0 50%,#3e5954 50%)}
+.theme-swatch.green{background:linear-gradient(130deg,#e9ebca 0 50%,#6c8052 50%)}
+.theme-swatch.blue{background:linear-gradient(130deg,#e1e5e8 0 50%,#657f8c 50%)}
