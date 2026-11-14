@@ -93,3 +93,40 @@ test("basic accessibility scan", async ({ page }) => {
   const results = await new AxeBuilder({ page }).exclude(".board-frame").analyze();
   expect(results.violations).toEqual([]);
 });
+
+test("settings return to the screen they were opened from", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await openNewGame(page);
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Настройки" })).toBeVisible();
+  await page.getByRole("button", { name: "Назад" }).click();
+  await expect(page.locator(".game-screen .board-frame")).toBeVisible();
+  await expect(page.locator(".game-controls")).toBeVisible();
+});
+
+test("mobile home menu fits without vertical scrolling when a game can be continued", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await openNewGame(page);
+  await page.getByRole("button", { name: "В меню" }).click();
+  await expect(page.getByRole("button", { name: "Продолжить партию" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Кампания" })).toBeVisible();
+  const dimensions = await page.evaluate(() => ({
+    viewport: document.documentElement.clientHeight,
+    content: document.documentElement.scrollHeight,
+  }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+});
+
+test("mobile settings fit in the viewport without a scroll area", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Настройки" }).click();
+  const dimensions = await page.locator(".settings-layout").evaluate((node) => ({
+    viewport: node.closest(".sub-screen").clientHeight,
+    content: node.closest(".sub-screen").scrollHeight,
+  }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
+});
