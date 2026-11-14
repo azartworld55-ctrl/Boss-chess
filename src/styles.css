@@ -520,3 +520,42 @@ body{background:#080b10 url("../images/backgrounds/arena.svg") center/cover fixe
 .theme-swatch{background:linear-gradient(130deg,#ead9b7 0 50%,#3e5954 50%)}
 .theme-swatch.green{background:linear-gradient(130deg,#e9ebca 0 50%,#6c8052 50%)}
 .theme-swatch.blue{background:linear-gradient(130deg,#e1e5e8 0 50%,#657f8c 50%)}
+
+/* Shared finish across the remaining game screens */
+.sub-screen{scrollbar-color:#8b6a3e transparent}
+.screen-title h1,.game-title strong{font-family:"Cinzel",Georgia,serif;letter-spacing:.2px}
+.form-section,.difficulty-section,.settings-group,.difficulty-panel,.history-list,.promotion-panel,.result-card{
+ border-color:#b78a4d4a;
+ box-shadow:0 14px 38px #0005,inset 0 1px #fff1;
+}
+.side-option,.difficulty-panel,.settings-group,.history-list,.promotion-panel{
+ border-radius:9px;background:linear-gradient(145deg,#1b252c,#0d141b);
+}
+.side-option.selected{border-color:#e0b363;background:linear-gradient(145deg,#44331e,#171d22);box-shadow:0 0 24px #d8a64f1a,inset 0 0 0 1px #e9c47a30}
+.difficulty-value strong,.range-labels span:last-child{color:#eac16f}
+.difficulty-panel input[type=range]{accent-color:#d8a64f}
+.difficulty-presets button,.elo-number input,.setting-toggle,.theme-swatch{
+ border-color:#b58b4c44;background:#101820;border-radius:7px;
+}
+.difficulty-presets button.selected,.theme-swatch.selected{border-color:#f0ca7b;background:#302719;box-shadow:0 0 18px #d8a64f1b}
+.settings-group-heading h2,.form-section h2,.difficulty-section h2{color:#d5b779}
+.setting-toggle{min-height:48px}
+.setting-toggle input:checked+i{background:#d8a64f}
+.game-controls button,.review-controls button{
+ border:1px solid #a77c454f;border-radius:8px;
+ background:linear-gradient(145deg,#1d2931,#0e151c);
+ box-shadow:0 8px 20px #0005,inset 0 1px #fff1;
+}
+.game-controls button:hover:not(:disabled),.review-controls button:hover{
+ border-color:#e0b363;background:linear-gradient(145deg,#29363d,#131c23);
+ box-shadow:0 12px 25px #0007,0 0 18px #d8a64f18;
+}
+.game-controls button svg,.review-controls button svg{color:#e8bd6c}
+.notation-strip{border-color:#b58b4c36;background:linear-gradient(110deg,#171f26,#0d141b);border-radius:8px}
+.elo-chip,.turn-pill{border-color:#b58b4c44;border-radius:7px;background:#111a21}
+.turn-pill.active{border-color:#d8a64f88;background:#352a1b;color:#f0ca7b}
+.check-notice,.error-banner{border-radius:8px}
+.history-list button{border-radius:7px}
+.history-list button.current{background:#3b2d1b;color:#f0ca7b}
+.promotion-panel button{border-color:#b58b4c44;border-radius:7px;background:linear-gradient(145deg,#253039,#101820)}
+.result-card{border-radius:9px;background:linear-gradient(145deg,#30271b,#111920)}
