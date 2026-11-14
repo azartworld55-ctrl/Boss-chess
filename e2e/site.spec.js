@@ -15,7 +15,7 @@ async function clickSquare(board, square) {
 
 test("opens the current Russian chess interface", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/Boss Chess 3\.0\.0/);
+  await expect(page).toHaveTitle(/Boss Chess 3\\.0\\.1/);
   await expect(page.getByRole("heading", { name: "Boss Chess" })).toBeVisible();
   await expect(page.getByRole("button", { name: /BOSS CHESS/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Новая партия" })).toBeVisible();
