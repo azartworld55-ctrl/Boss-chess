@@ -10,6 +10,7 @@ async function openNewGame(page) {
 }
 
 async function clickSquare(page, board, square) {
+  // The new-game flow starts with White at the bottom of the board.
   const bounds = await board.boundingBox();
   if (!bounds) throw new Error("Chessboard is not visible");
   const file = square.charCodeAt(0) - 97;
